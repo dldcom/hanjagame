@@ -151,15 +151,7 @@ export default function WizardMode({ onBack }) {
         }}>
           
           {/* Battle Arena Area */}
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: '1fr 1fr', 
-            gridTemplateRows: 'auto 1fr', 
-            gap: '2rem',
-            flex: 1,
-            padding: '2rem',
-            paddingBottom: '120px'
-          }}>
+          <div className="wizard-battle-area">
             
             {/* Top Left: Enemy Status */}
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
@@ -181,7 +173,7 @@ export default function WizardMode({ onBack }) {
                 alt={MONSTER.name}
                 animate={{ y: [0, -15, 0] }}
                 transition={{ y: { repeat: Infinity, duration: 2, ease: "easeInOut" } }}
-                style={{ maxHeight: '300px', objectFit: 'contain', zIndex: 5 }}
+                className="wizard-monster-img"
               />
               <AnimatePresence>
                 {activeEffect && activeEffect.target === 'monster' && (
@@ -216,7 +208,7 @@ export default function WizardMode({ onBack }) {
                 alt={PLAYER_MONSTER.name}
                 animate={{ y: [0, 10, 0] }}
                 transition={{ y: { repeat: Infinity, duration: 2.5, ease: "easeInOut" } }}
-                style={{ maxHeight: '300px', objectFit: 'contain', zIndex: 2 }}
+                className="wizard-player-img" style={{ zIndex: 2 }}
               />
               <AnimatePresence>
                 {activeEffect && activeEffect.target === 'player' && (
@@ -247,7 +239,7 @@ export default function WizardMode({ onBack }) {
               <h3 style={{ color: 'var(--text-main)', fontSize: '2.5rem', margin: '0 0 0.5rem 0', textShadow: '2px 2px 0px white', zIndex: 10 }}>
                 {currentSpell.meaning}
               </h3>
-              <div style={{ transform: 'scale(0.95)', transformOrigin: 'top center', width: '400px', height: '400px', pointerEvents: dialogue ? 'none' : 'auto', opacity: dialogue ? 0.5 : 1 }}>
+              <div className="wizard-hanja-wrapper" style={{ pointerEvents: dialogue ? 'none' : 'auto', opacity: dialogue ? 0.5 : 1 }}>
                 <HanjaPad 
                   key={`${turnState}-${currentSpell.char}-${monsterHp}-${playerHp}`}
                   character={currentSpell.char} 

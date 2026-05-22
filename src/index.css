@@ -71,3 +71,65 @@ button.secondary {
 button.secondary:active {
   box-shadow: 0 0px 0 #E6B800;
 }
+
+/* Wizard Mode Responsive */
+.wizard-battle-area {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 2rem;
+  flex: 1;
+  padding: 2rem;
+  padding-bottom: 120px;
+}
+
+.wizard-hanja-wrapper {
+  transform: scale(0.95);
+  transform-origin: top center;
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+}
+
+.wizard-monster-img,
+.wizard-player-img {
+  max-height: 300px;
+  object-fit: contain;
+  z-index: 5;
+}
+
+@media (max-width: 900px) {
+  .wizard-battle-area {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    padding: 1rem;
+    padding-bottom: 80px;
+    gap: 1rem;
+  }
+  .wizard-hanja-wrapper {
+    transform: scale(0.75);
+    margin-top: -30px;
+    margin-bottom: -30px;
+  }
+  .wizard-monster-img,
+  .wizard-player-img {
+    max-height: 180px;
+  }
+}
+
+@media (max-height: 800px) {
+  .wizard-battle-area {
+    padding-top: 1rem;
+    padding-bottom: 80px;
+    gap: 1rem;
+  }
+  .wizard-hanja-wrapper {
+    transform: scale(0.65);
+    margin-top: -50px;
+    margin-bottom: -50px;
+  }
+  .wizard-monster-img,
+  .wizard-player-img {
+    max-height: 200px;
+  }
+}
