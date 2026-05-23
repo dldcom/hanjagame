@@ -1,36 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import HanjaPad from './HanjaPad';
 import { LEVEL_8_HANJA } from '../data/hanjaData';
+import { getMonsterById, ENEMY_MONSTERS } from '../data/monsterData';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const MONSTER = {
-  name: '불 도깨비',
-  imageUrl: '/fire_monster_bg.png',
-  maxHp: 5,
-};
-
-const PLAYER_MONSTER = {
-  name: '물 드래곤',
-  imageUrl: '/player_monster_bg.png',
-};
 
 const getRandomSpell = () => LEVEL_8_HANJA[Math.floor(Math.random() * LEVEL_8_HANJA.length)];
 
-export default function WizardMode({ onBack }) {
-  const [playerHp, setPlayerHp] = useState(5);
-  const [monsterHp, setMonsterHp] = useState(MONSTER.maxHp);
-  const [turnState, setTurnState] = useState('player_attack'); // 'player_attack', 'monster_attack', 'end'
-  
-  const [currentSpell, setCurrentSpell] = useState(getRandomSpell()); 
-  const [dialogue, setDialogue] = useState('야생의 불 도깨비가 나타났다!'); // Text in the dialogue box
-  const [dialogueQueue, setDialogueQueue] = useState([]); // Queue of dialogues to show
-  const [activeEffect, setActiveEffect] = useState(null); // { type: 'slash', target: 'monster' | 'player' }
-  
-  const [currentMaxTime, setCurrentMaxTime] = useState(8);
-  const [timeLeft, setTimeLeft] = useState(8);
+export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUnlockedLevel8 }) {
+  const PLAYER_MONSTER = getMonsterById(activeMonsterId || 'water_dragon');
+  const [selectedEnemy, setSelectedEnemy] = useState(null);
 
-  const enqueueDialogue = (text, onFinished = null) => {
+  const [playerHp, setPlayerHp] = useState(5);
+  const [monsterHp, setMonsterHp] = useState(1);
+  const [turnState, setTurnState] = useState('player_attack'); 
+  
+  const [currentSpell, setCurrentSpell] = useState(null); 
+  const [dialogue, setDialogue] = useState(null); 
+  const [dialogueQueue, setDialogueQueue] = useState([]); 
+  const [activeEffect, setActiveEffect] = useState(null); 
+  
+  const [currentMaxTime, setCurrentMaxTime] = useState(10);
+  const [timeLeft, setTimeLeft] = useState(10);
+
+  const enqueueDialogue = useCallback((text, onFinished = null) => {
     setDialogueQueue(prev => [...prev, { text, onFinished }]);
+  }, []);
+
+  const handleSelectEnemy = (enemy) => {
+    setSelectedEnemy(enemy);
+    setMonsterHp(enemy.maxHp);
+    setPlayerHp(5);
+    setTurnState('player_attack');
+    setCurrentSpell(getRandomSpell());
+    setDialogue(`야생의 ${enemy.name}이(가) 나타났다! 내 턴이다, 공격하자!`);
+    setDialogueQueue([]);
+    setActiveEffect(null);
+    setCurrentMaxTime(10);
+    setTimeLeft(10);
   };
 
   useEffect(() => {
@@ -41,7 +47,7 @@ export default function WizardMode({ onBack }) {
   }, [dialogue, dialogueQueue]);
 
   useEffect(() => {
-    if (turnState !== 'end' && !dialogue && dialogueQueue.length === 0) {
+    if (selectedEnemy && (turnState === 'player_attack' || turnState === 'monster_attack') && !dialogue && dialogueQueue.length === 0) {
       if (timeLeft <= 0) {
         takeDamage();
         return;
@@ -51,17 +57,13 @@ export default function WizardMode({ onBack }) {
       }, 1000);
       return () => clearInterval(timerId);
     }
-  }, [turnState, dialogue, dialogueQueue, timeLeft]);
+  }, [selectedEnemy, turnState, dialogue, dialogueQueue, timeLeft]);
 
   const handleDialogueClick = () => {
     if (!dialogue) return;
     const current = dialogueQueue[0];
-    
-    // Clear current dialogue
     setDialogue(null);
     setDialogueQueue(prev => prev.slice(1));
-    
-    // Execute callback if any
     if (current && current.onFinished) {
       current.onFinished();
     }
@@ -69,108 +71,173 @@ export default function WizardMode({ onBack }) {
 
   const handleComplete = () => {
     if (turnState === 'player_attack') {
-      setActiveEffect({ type: currentSpell.effectType, target: 'monster' });
+      setActiveEffect({ type: currentSpell.effectType || 'magic', target: 'monster' });
       setTimeout(() => setActiveEffect(null), 1000);
-      enqueueDialogue(`[${currentSpell.meaning}] ${currentSpell.spell} 성공!`);
-      enqueueDialogue('불 도깨비에게 데미지를 입혔다!', () => {
-        setMonsterHp(prev => Math.max(0, prev - 1));
-        if (monsterHp - 1 <= 0) {
-          enqueueDialogue('불 도깨비를 물리쳤다!', () => setTurnState('end'));
+      enqueueDialogue(`[${currentSpell.meaning}] 마법 시전 성공!`);
+      
+      enqueueDialogue(`${selectedEnemy.name}에게 데미지를 입혔다!`, () => {
+        const nextMonsterHp = Math.max(0, monsterHp - 1);
+        setMonsterHp(nextMonsterHp);
+        
+        if (nextMonsterHp <= 0) {
+          enqueueDialogue(`${selectedEnemy.name}을(를) 물리쳤다!`, () => {
+            if (onBattleWin) onBattleWin(activeMonsterId);
+            setTurnState('end');
+          });
         } else {
           const nextSpell = getRandomSpell();
           setCurrentSpell(nextSpell);
-          const nextTime = Math.max(3, currentMaxTime - 0.5); // 턴이 지날수록 0.5초씩 감소 (최소 3초)
+          const nextTime = Math.max(5, currentMaxTime - 0.5); 
           setCurrentMaxTime(nextTime);
           setTimeLeft(nextTime);
-          enqueueDialogue(`불 도깨비가 [${nextSpell.meaning}] 공격을 시도한다! 방어하자!`, () => {
+          enqueueDialogue(`${selectedEnemy.name}이(가) 반격한다! [${nextSpell.meaning}] 방패 마법을 준비해!`, () => {
              setTurnState('monster_attack');
           });
         }
       });
     } else if (turnState === 'monster_attack') {
-      setActiveEffect({ type: currentSpell.effectType, target: 'player' });
+      setActiveEffect({ type: currentSpell.effectType || 'magic', target: 'player' });
       setTimeout(() => setActiveEffect(null), 1000);
-      enqueueDialogue(`[${currentSpell.meaning}] ${currentSpell.spell} 방어 성공!`);
-      enqueueDialogue('불 도깨비의 공격을 완벽하게 막아냈다!', () => {
+      
+      enqueueDialogue(`[${currentSpell.meaning}] 완벽한 방어 마법 전개!`);
+      enqueueDialogue(`${selectedEnemy.name}의 공격을 완벽하게 튕겨냈다!`, () => {
         const nextSpell = getRandomSpell();
         setCurrentSpell(nextSpell);
-        const nextTime = Math.max(3, currentMaxTime - 0.5);
+        const nextTime = Math.max(5, currentMaxTime - 0.5); 
         setCurrentMaxTime(nextTime);
         setTimeLeft(nextTime);
-        enqueueDialogue(`내 턴이다! 제한시간이 짧아진다! [${nextSpell.meaning}] 공격을 준비하자!`, () => {
+        enqueueDialogue(`내 턴이다! [${nextSpell.meaning}] 마법으로 공격하자!`, () => {
           setTurnState('player_attack');
         });
       });
     }
   };
 
-  const handleMistake = () => {};
-
   const takeDamage = () => {
     enqueueDialogue('앗! 시간 초과! 마법 시전에 실패했다!');
-    enqueueDialogue('마법사가 데미지를 입었다!', () => {
-      setPlayerHp(prev => Math.max(0, prev - 1));
-      if (playerHp - 1 <= 0) {
+    enqueueDialogue(`마법사가 공격을 받았다!`, () => {
+      const nextPlayerHp = Math.max(0, playerHp - 1);
+      setPlayerHp(nextPlayerHp);
+      if (nextPlayerHp <= 0) {
         enqueueDialogue('눈앞이 깜깜해졌다...', () => setTurnState('end'));
       } else {
         const nextSpell = getRandomSpell();
         setCurrentSpell(nextSpell);
-        const nextTime = Math.max(3, currentMaxTime - 0.5);
-        setCurrentMaxTime(nextTime);
-        setTimeLeft(nextTime);
-        enqueueDialogue(`다시 [${nextSpell.meaning}] 마법을 준비하자! 서둘러야 해!`, () => {
-          setTurnState('player_attack');
-        });
+        if (turnState === 'player_attack') {
+          enqueueDialogue(`${selectedEnemy.name}이(가) 반격한다! [${nextSpell.meaning}] 방패 마법을 준비해!`, () => {
+             setTurnState('monster_attack');
+          });
+        } else {
+          enqueueDialogue(`내 턴이다! [${nextSpell.meaning}] 마법으로 공격하자!`, () => {
+            setTurnState('player_attack');
+          });
+        }
       }
     });
   };
 
+  if (!selectedEnemy) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
+        <button className="secondary" onClick={onBack} style={{ alignSelf: 'flex-start', marginBottom: '2rem' }}>
+          ← 마을로 돌아가기
+        </button>
+        <h1 style={{ textAlign: 'center', color: 'var(--primary)', marginBottom: '2rem', textShadow: '2px 2px 0px var(--secondary)' }}>
+          전투할 몬스터를 선택하세요
+        </h1>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center' }}>
+          {ENEMY_MONSTERS.map((enemy) => {
+            const isUnlocked = maxUnlockedLevel8 >= enemy.requiredLevel;
+            return (
+              <div 
+                key={enemy.id}
+                className="card"
+                onClick={() => isUnlocked && handleSelectEnemy(enemy)}
+                style={{
+                  width: '200px',
+                  textAlign: 'center',
+                  cursor: isUnlocked ? 'pointer' : 'not-allowed',
+                  opacity: isUnlocked ? 1 : 0.6,
+                  filter: isUnlocked ? 'none' : 'grayscale(100%)',
+                  background: isUnlocked ? 'white' : '#f5f5f5',
+                  transform: isUnlocked ? 'scale(1)' : 'scale(0.95)',
+                  transition: 'all 0.2s',
+                  boxShadow: isUnlocked ? '0 10px 20px rgba(0,0,0,0.1)' : 'none'
+                }}
+              >
+                <div style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '1rem', color: isUnlocked ? 'var(--text-main)' : '#999' }}>
+                  {isUnlocked ? enemy.name : '???'}
+                </div>
+                <img src={enemy.imageUrl} alt={enemy.name} style={{ width: '120px', height: '120px', objectFit: 'contain' }} />
+                <div style={{ marginTop: '1rem', color: 'var(--error)', fontWeight: 'bold', fontSize: '1.2rem' }}>
+                  HP: {enemy.maxHp}
+                </div>
+                {!isUnlocked && (
+                  <div style={{ marginTop: '0.5rem', color: '#666', fontSize: '0.9rem', fontWeight: 'bold' }}>
+                    (8급 난이도 {enemy.requiredLevel} 클리어 필요)
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '1000px', margin: '0 auto', height: '90vh' }}>
-      <button className="secondary" onClick={onBack} style={{ alignSelf: 'flex-start', marginBottom: '1rem', zIndex: 10 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '1000px', margin: '0 auto', minHeight: '90vh' }}>
+      <button className="secondary" onClick={() => setSelectedEnemy(null)} style={{ alignSelf: 'flex-start', marginBottom: '1rem', zIndex: 10 }}>
         ← 도망치기
       </button>
 
       {turnState === 'end' && (
         <div className="card" style={{ textAlign: 'center', padding: '4rem', marginTop: '10vh' }}>
-          <h1 style={{ fontSize: '3rem' }}>{playerHp > 0 ? '🎉 승리했습니다!' : '😭 패배...'}</h1>
-          <button style={{ marginTop: '2rem' }} onClick={onBack}>마을로 돌아가기</button>
+          <h1 style={{ fontSize: '3rem' }}>{playerHp > 0 ? '🎉 전투 승리!' : '😭 전투 패배...'}</h1>
+          {playerHp > 0 && (
+            <div style={{ margin: '2rem 0', fontSize: '1.5rem', color: 'var(--primary)', fontWeight: 'bold' }}>
+              <p>🎁 몬스터 알 조각 +3 획득!</p>
+              <p>✨ 경험치 +10 획득!!</p>
+            </div>
+          )}
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
+            <button onClick={() => setSelectedEnemy(null)}>다른 몬스터 선택</button>
+            <button className="secondary" onClick={onBack}>마 마을로 돌아가기</button>
+          </div>
         </div>
       )}
 
       {turnState !== 'end' && (
-        <div style={{ 
+        <div className="card" style={{ 
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
-          background: 'linear-gradient(to bottom, #e0f7fa 0%, #b2ebf2 100%)',
-          borderRadius: '32px',
-          boxShadow: 'inset 0 0 50px rgba(255,255,255,0.5)',
           overflow: 'hidden',
-          position: 'relative'
+          position: 'relative',
+          padding: 0
         }}>
           
-          {/* Battle Arena Area */}
           <div className="wizard-battle-area">
             
-            {/* Top Left: Enemy Status */}
+            {/* Enemy Status */}
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
               <div className="card" style={{ padding: '1rem 2rem', border: '4px solid #FFD23F', background: 'white', borderRadius: '24px 24px 24px 0', width: '90%' }}>
-                <h2 style={{ margin: 0, color: 'var(--text-main)' }}>{MONSTER.name}</h2>
+                <h2 style={{ margin: 0, color: 'var(--text-main)' }}>{selectedEnemy.name}</h2>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
                   <span style={{ fontWeight: 'bold' }}>HP</span>
                   <div style={{ flex: 1, height: '16px', background: '#eee', borderRadius: '8px', overflow: 'hidden' }}>
-                    <motion.div animate={{ width: `${(monsterHp / MONSTER.maxHp) * 100}%` }} style={{ height: '100%', background: 'var(--error)' }} />
+                    <motion.div animate={{ width: `${(monsterHp / selectedEnemy.maxHp) * 100}%` }} style={{ height: '100%', background: 'var(--error)' }} />
                   </div>
+                  <span style={{ fontWeight: 'bold' }}>{monsterHp}/{selectedEnemy.maxHp}</span>
                 </div>
               </div>
             </div>
 
-            {/* Top Right: Enemy Monster Image */}
+            {/* Enemy Monster Image */}
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', position: 'relative' }}>
               <motion.img 
-                src={MONSTER.imageUrl} 
-                alt={MONSTER.name}
+                src={selectedEnemy.imageUrl} 
+                alt={selectedEnemy.name}
                 animate={{ y: [0, -15, 0] }}
                 transition={{ y: { repeat: Infinity, duration: 2, ease: "easeInOut" } }}
                 className="wizard-monster-img"
@@ -183,29 +250,30 @@ export default function WizardMode({ onBack }) {
                     animate={{ scale: 1.5, opacity: 1, rotate: 0 }}
                     exit={{ scale: 2, opacity: 0 }}
                     transition={{ duration: 0.5, type: 'spring' }}
-                    style={{ position: 'absolute', top: '20%', zIndex: 20, width: '250px', height: '250px', objectFit: 'contain', pointerEvents: 'none' }}
+                    className="wizard-effect-img"
+                    style={{ top: '20%' }}
+                    onError={(e) => { e.target.style.display = 'none'; }}
                   />
                 )}
               </AnimatePresence>
             </div>
 
-            {/* Bottom Left: Player Monster Image & Status */}
+            {/* Player Monster Image & Status */}
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', position: 'relative' }}>
               <div className="card" style={{ padding: '1rem 2rem', border: '4px solid var(--primary)', background: 'white', borderRadius: '24px', marginBottom: '-40px', zIndex: 10, width: '90%' }}>
-                <h2 style={{ margin: 0, color: 'var(--primary)' }}>{PLAYER_MONSTER.name}</h2>
+                <h2 style={{ margin: 0, color: 'var(--primary)' }}>{PLAYER_MONSTER?.name || '꼬마 마법사'}</h2>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
                   <span style={{ fontWeight: 'bold' }}>HP</span>
-                  <div style={{ display: 'flex', gap: '5px', fontSize: '1.5rem' }}>
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <span key={i}>{i < playerHp ? '❤️' : '🖤'}</span>
-                    ))}
+                  <div style={{ flex: 1, height: '16px', background: '#eee', borderRadius: '8px', overflow: 'hidden' }}>
+                    <motion.div animate={{ width: `${(playerHp / 5) * 100}%` }} style={{ height: '100%', background: 'var(--success)' }} />
                   </div>
+                  <span style={{ fontWeight: 'bold' }}>{playerHp}/5</span>
                 </div>
               </div>
 
                <motion.img 
-                src={PLAYER_MONSTER.imageUrl} 
-                alt={PLAYER_MONSTER.name}
+                src={PLAYER_MONSTER?.imageUrl || '/player_monster.png'} 
+                alt={PLAYER_MONSTER?.name || 'Player'}
                 animate={{ y: [0, 10, 0] }}
                 transition={{ y: { repeat: Infinity, duration: 2.5, ease: "easeInOut" } }}
                 className="wizard-player-img" style={{ zIndex: 2 }}
@@ -218,16 +286,40 @@ export default function WizardMode({ onBack }) {
                     animate={{ scale: 1.5, opacity: 1 }}
                     exit={{ scale: 2, opacity: 0 }}
                     transition={{ duration: 0.5, type: 'spring' }}
-                    style={{ position: 'absolute', top: '25%', zIndex: 20, width: '250px', height: '250px', objectFit: 'contain', pointerEvents: 'none' }}
+                    className="wizard-effect-img"
+                    style={{ top: '25%' }}
+                    onError={(e) => { e.target.style.display = 'none'; }}
                   />
                 )}
               </AnimatePresence>
             </div>
 
-            {/* Bottom Right: Hanja Pad Input & Timer */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
+            {/* Action Area */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', position: 'relative' }}>
               
-              {/* Timer Bar */}
+              <AnimatePresence>
+                {dialogue && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    style={{
+                      position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                      background: 'rgba(0,0,0,0.8)', color: 'white', padding: '2rem',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      zIndex: 50, cursor: 'pointer', textAlign: 'center', borderRadius: '16px',
+                      fontSize: '1.5rem', lineHeight: '1.5'
+                    }}
+                    onClick={handleDialogueClick}
+                  >
+                    {dialogue}
+                    <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', fontSize: '1rem', animation: 'pulse 1s infinite' }}>
+                      터치해서 진행 ▶
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               <div style={{ width: '80%', height: '12px', background: '#ccc', borderRadius: '6px', overflow: 'hidden', marginBottom: '1rem', marginTop: '-1rem' }}>
                 <motion.div 
                   animate={{ width: `${(timeLeft / currentMaxTime) * 100}%` }}
@@ -236,52 +328,26 @@ export default function WizardMode({ onBack }) {
                 />
               </div>
 
-              <h3 style={{ color: 'var(--text-main)', fontSize: '2.5rem', margin: '0 0 0.5rem 0', textShadow: '2px 2px 0px white', zIndex: 10 }}>
-                {currentSpell.meaning}
-              </h3>
-              <div className="wizard-hanja-wrapper" style={{ pointerEvents: dialogue ? 'none' : 'auto', opacity: dialogue ? 0.5 : 1 }}>
-                <HanjaPad 
-                  key={`${turnState}-${currentSpell.char}-${monsterHp}-${playerHp}`}
-                  character={currentSpell.char} 
-                  onComplete={handleComplete} 
-                  onMistake={handleMistake}
-                  hideHint={true}
-                  faintOutline={true}
-                />
-              </div>
+              {currentSpell && (
+                <>
+                  <h3 className="spell-text" style={{ zIndex: 10 }}>
+                    {turnState === 'player_attack' ? `공격 마법: ${currentSpell.meaning}` : `방패 마법: ${currentSpell.meaning}`}
+                  </h3>
+                  <div className="wizard-hanja-wrapper" style={{ pointerEvents: dialogue ? 'none' : 'auto', opacity: dialogue ? 0.5 : 1 }}>
+                    <HanjaPad 
+                      key={`${turnState}-${currentSpell.char}-${monsterHp}-${playerHp}`}
+                      character={currentSpell.char} 
+                      onComplete={handleComplete} 
+                      onMistake={() => {}}
+                      hideHint={true}
+                      faintOutline={true}
+                      showOutline={true}
+                    />
+                  </div>
+                </>
+              )}
             </div>
-
           </div>
-
-          {/* Dialogue Box (Pokemon Style) */}
-          <AnimatePresence>
-            {dialogue && (
-              <div 
-                onClick={handleDialogueClick}
-                style={{
-                  position: 'absolute', top: 0, bottom: 0, left: 0, right: 0,
-                  zIndex: 100, cursor: 'pointer'
-                }}
-              >
-                <motion.div 
-                  initial={{ y: 100, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: 100, opacity: 0 }}
-                  style={{ 
-                    position: 'absolute', bottom: '0', left: '0', right: '0',
-                    background: 'rgba(0, 0, 0, 0.8)', color: 'white',
-                    padding: '2rem 3rem', borderTop: '6px solid var(--primary)',
-                    fontSize: '2rem',
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-                  }}
-                >
-                  <span>{dialogue}</span>
-                  <span style={{ fontSize: '1.5rem', animation: 'pulse 1s infinite' }}>▶ 아무데나 터치</span>
-                </motion.div>
-              </div>
-            )}
-          </AnimatePresence>
-          
         </div>
       )}
     </div>

@@ -1,5 +1,5 @@
 export const LEVEL_8_HANJA = [
-  // 숫자
+  // --- 난이도 1 (숫자 1~10): 기초 중의 기초 ---
   { char: '一', meaning: '한 일', spell: '일자 베기', effectType: 'slash' },
   { char: '二', meaning: '두 이', spell: '이단 옆차기', effectType: 'slash' },
   { char: '三', meaning: '석 삼', spell: '삼연격', effectType: 'slash' },
@@ -10,54 +10,174 @@ export const LEVEL_8_HANJA = [
   { char: '八', meaning: '여덟 팔', spell: '팔방수리검', effectType: 'arrow' },
   { char: '九', meaning: '아홉 구', spell: '구미호의 저주', effectType: 'arrow' },
   { char: '十', meaning: '열 십', spell: '십자 베기', effectType: 'slash' },
-  { char: '百', meaning: '일백 백', spell: '백발백중 화살', effectType: 'arrow' },
-  { char: '千', meaning: '일천 천', spell: '천둥의 울림', effectType: 'explosion' },
-  { char: '萬', meaning: '일만 만', spell: '만개의 검', effectType: 'arrow' },
 
-  // 요일 및 자연
+  // --- 난이도 2 (2~3획): 가장 획수가 적은 나머지 한자들 ---
+  { char: '人', meaning: '사람 인', spell: '인간의 지혜', effectType: 'heart' },
+  { char: '千', meaning: '일천 천', spell: '천둥의 울림', effectType: 'explosion' },
+  { char: '土', meaning: '흙 토', spell: '지진 일으키기', effectType: 'earth' },
+  { char: '山', meaning: '뫼 산', spell: '바위 산 압사', effectType: 'earth' },
+  { char: '川', meaning: '내 천', spell: '급류 휩쓸기', effectType: 'water' },
+  { char: '女', meaning: '여자 녀', spell: '여신의 축복', effectType: 'heart' },
+  { char: '大', meaning: '큰 대', spell: '거대화 압박', effectType: 'explosion' },
+  { char: '小', meaning: '작을 소', spell: '소인화 회피', effectType: 'magic' },
+  { char: '上', meaning: '위 상', spell: '상단 찌르기', effectType: 'punch' },
+  { char: '下', meaning: '아래 하', spell: '하단 베기', effectType: 'punch' },
+
+  // --- 난이도 3 (4~5획): 획수가 살짝 늘어난 중간 난이도 ---
   { char: '日', meaning: '날 일', spell: '태양의 빛', effectType: 'explosion' },
   { char: '月', meaning: '달 월', spell: '달빛 베기', effectType: 'slash' },
   { char: '火', meaning: '불 화', spell: '화염 폭발', effectType: 'explosion' },
   { char: '水', meaning: '물 수', spell: '물대포', effectType: 'water' },
   { char: '木', meaning: '나무 목', spell: '나무 덩굴채찍', effectType: 'water' },
-  { char: '金', meaning: '쇠 금', spell: '강철 주먹', effectType: 'punch' },
-  { char: '土', meaning: '흙 토', spell: '지진 일으키기', effectType: 'earth' },
-  { char: '山', meaning: '뫼 산', spell: '바위 산 압사', effectType: 'earth' },
-  { char: '川', meaning: '내 천', spell: '급류 휩쓸기', effectType: 'water' },
-  { char: '江', meaning: '강 강', spell: '큰 강물 해일', effectType: 'water' },
   { char: '天', meaning: '하늘 천', spell: '천공의 심판', effectType: 'magic' },
-  { char: '地', meaning: '땅 지', spell: '대지 가르기', effectType: 'earth' },
-
-  // 방향 및 계절
-  { char: '東', meaning: '동녘 동', spell: '동쪽의 바람', effectType: 'water' },
-  { char: '西', meaning: '서녘 서', spell: '서쪽의 노을', effectType: 'magic' },
-  { char: '南', meaning: '남녘 남', spell: '남쪽의 온기', effectType: 'magic' },
-  { char: '北', meaning: '북녘 북', spell: '북풍의 한기', effectType: 'water' },
-  { char: '春', meaning: '봄 춘', spell: '봄바람 치유', effectType: 'heart' },
-  { char: '夏', meaning: '여름 하', spell: '여름의 폭염', effectType: 'explosion' },
-  { char: '秋', meaning: '가을 추', spell: '가을 낙엽보라', effectType: 'water' },
-  { char: '冬', meaning: '겨울 동', spell: '겨울 눈보라', effectType: 'water' },
-
-  // 사람 및 가족
-  { char: '人', meaning: '사람 인', spell: '인간의 지혜', effectType: 'heart' },
-  { char: '男', meaning: '사내 남', spell: '사나이의 돌격', effectType: 'slash' },
-  { char: '女', meaning: '여자 녀', spell: '여신의 축복', effectType: 'heart' },
   { char: '父', meaning: '아비 부', spell: '아버지의 호통', effectType: 'explosion' },
+  { char: '中', meaning: '가운데 중', spell: '중심 타격', effectType: 'punch' },
+  { char: '王', meaning: '임금 왕', spell: '왕의 명령', effectType: 'magic' },
+  { char: '北', meaning: '북녘 북', spell: '북풍의 한기', effectType: 'water' },
+
+  // --- 난이도 4 (5~7획): 다소 헷갈릴 수 있는 한자들 ---
+  { char: '冬', meaning: '겨울 동', spell: '겨울 눈보라', effectType: 'water' },
   { char: '母', meaning: '어미 모', spell: '어머니의 품', effectType: 'heart' },
   { char: '兄', meaning: '형 형', spell: '형님의 조언', effectType: 'magic' },
-  { char: '弟', meaning: '아우 제', spell: '아우의 재롱', effectType: 'heart' },
-
-  // 크기 및 위치
-  { char: '大', meaning: '큰 대', spell: '거대화 압박', effectType: 'explosion' },
-  { char: '中', meaning: '가운데 중', spell: '중심 타격', effectType: 'punch' },
-  { char: '小', meaning: '작을 소', spell: '소인화 회피', effectType: 'magic' },
-  { char: '上', meaning: '위 상', spell: '상단 찌르기', effectType: 'punch' },
-  { char: '下', meaning: '아래 하', spell: '하단 베기', effectType: 'punch' },
   { char: '左', meaning: '왼 좌', spell: '좌측 훅', effectType: 'punch' },
   { char: '右', meaning: '오른 우', spell: '우측 스트레이트', effectType: 'punch' },
+  { char: '百', meaning: '일백 백', spell: '백발백중 화살', effectType: 'arrow' },
+  { char: '江', meaning: '강 강', spell: '큰 강물 해일', effectType: 'water' },
+  { char: '地', meaning: '땅 지', spell: '대지 가르기', effectType: 'earth' },
+  { char: '西', meaning: '서녘 서', spell: '서쪽의 노을', effectType: 'magic' },
+  { char: '男', meaning: '사내 남', spell: '사나이의 돌격', effectType: 'slash' },
 
-  // 기타 기초
-  { char: '王', meaning: '임금 왕', spell: '왕의 명령', effectType: 'magic' },
-  { char: '門', meaning: '문 문', spell: '철문 방패', effectType: 'magic' },
+  // --- 난이도 5 (7~13획): 8급 중에서 가장 복잡하고 어려운 한자 ---
+  { char: '弟', meaning: '아우 제', spell: '아우의 재롱', effectType: 'heart' },
   { char: '車', meaning: '수레 차', spell: '전차 돌진', effectType: 'explosion' },
+  { char: '金', meaning: '쇠 금', spell: '강철 주먹', effectType: 'punch' },
+  { char: '東', meaning: '동녘 동', spell: '동쪽의 바람', effectType: 'water' },
+  { char: '門', meaning: '문 문', spell: '철문 방패', effectType: 'magic' },
+  { char: '南', meaning: '남녘 남', spell: '남쪽의 온기', effectType: 'magic' },
+  { char: '春', meaning: '봄 춘', spell: '봄바람 치유', effectType: 'heart' },
+  { char: '秋', meaning: '가을 추', spell: '가을 낙엽보라', effectType: 'water' },
+  { char: '夏', meaning: '여름 하', spell: '여름의 폭염', effectType: 'explosion' },
+  { char: '萬', meaning: '일만 만', spell: '만개의 검', effectType: 'arrow' },
+];
+
+export const LEVEL_7_HANJA = [
+  // --- 7급 난이도 1 (2~3획) ---
+  { char: '力', meaning: '힘 력', spell: '파워 스트라이크', effectType: 'punch' },
+  { char: '入', meaning: '들 입', spell: '차원 이동', effectType: 'magic' },
+  { char: '工', meaning: '장인 공', spell: '대장장이의 망치', effectType: 'punch' },
+  { char: '夕', meaning: '저녁 석', spell: '어스름의 그림자', effectType: 'magic' },
+  { char: '子', meaning: '아들 자', spell: '소년의 용기', effectType: 'heart' },
+  { char: '寸', meaning: '마디 촌', spell: '정밀 타격', effectType: 'slash' },
+  { char: '口', meaning: '입 구', spell: '초음파 함성', effectType: 'explosion' },
+  { char: '文', meaning: '글월 문', spell: '지식의 방패', effectType: 'magic' },
+  { char: '方', meaning: '모 방', spell: '사방진 결계', effectType: 'magic' },
+  { char: '夫', meaning: '지아비 부', spell: '든든한 어깨', effectType: 'punch' },
+
+  // --- 7급 난이도 2 (4~5획) ---
+  { char: '不', meaning: '아닐 불', spell: '마법 무효화', effectType: 'magic' },
+  { char: '少', meaning: '적을 소', spell: '축소 광선', effectType: 'magic' },
+  { char: '手', meaning: '손 수', spell: '거대 손바닥', effectType: 'punch' },
+  { char: '心', meaning: '마음 심', spell: '마인드 컨트롤', effectType: 'heart' },
+  { char: '午', meaning: '낮 오', spell: '정오의 햇살', effectType: 'explosion' },
+  { char: '內', meaning: '안 내', spell: '내면의 집중', effectType: 'heart' },
+  { char: '立', meaning: '설 립', spell: '기둥 소환', effectType: 'earth' },
+  { char: '民', meaning: '백성 민', spell: '군중의 함성', effectType: 'explosion' },
+  { char: '白', meaning: '흰 백', spell: '순백의 빛', effectType: 'magic' },
+  { char: '生', meaning: '날 생', spell: '치유의 새싹', effectType: 'heart' },
+
+  // --- 7급 난이도 3 (5~6획) ---
+  { char: '世', meaning: '인간 세', spell: '인생 극장', effectType: 'magic' },
+  { char: '市', meaning: '저자 시', spell: '시장통 소음', effectType: 'explosion' },
+  { char: '外', meaning: '바깥 외', spell: '외부 차단', effectType: 'magic' },
+  { char: '主', meaning: '주인 주', spell: '주인의 명령', effectType: 'magic' },
+  { char: '出', meaning: '날 출', spell: '돌진 베기', effectType: 'slash' },
+  { char: '平', meaning: '평평할 평', spell: '대지 평정', effectType: 'earth' },
+  { char: '正', meaning: '바를 정', spell: '정의의 일격', effectType: 'slash' },
+  { char: '同', meaning: '한가지 동', spell: '도플갱어 분신', effectType: 'magic' },
+  { char: '老', meaning: '늙을 로', spell: '현자의 시간', effectType: 'magic' },
+  { char: '名', meaning: '이름 명', spell: '네임드 태그', effectType: 'magic' },
+
+  // --- 7급 난이도 4 (6~7획) ---
+  { char: '色', meaning: '빛 색', spell: '무지개 광선', effectType: 'magic' },
+  { char: '先', meaning: '먼저 선', spell: '선제 공격', effectType: 'slash' },
+  { char: '安', meaning: '편안 안', spell: '평화의 안식처', effectType: 'heart' },
+  { char: '有', meaning: '있을 유', spell: '창조의 마법', effectType: 'magic' },
+  { char: '字', meaning: '글자 자', spell: '문자 폭격', effectType: 'explosion' },
+  { char: '自', meaning: '스스로 자', spell: '자가 치유', effectType: 'heart' },
+  { char: '全', meaning: '온전 전', spell: '풀 플레이트 아머', effectType: 'magic' },
+  { char: '休', meaning: '쉴 휴', spell: '수면 가루', effectType: 'magic' },
+  { char: '里', meaning: '마을 리', spell: '마을의 온기', effectType: 'heart' },
+  { char: '每', meaning: '매양 매', spell: '연속 공격', effectType: 'slash' },
+
+  // --- 7급 난이도 5 (7~8획) ---
+  { char: '邑', meaning: '고을 읍', spell: '성벽 소환', effectType: 'earth' },
+  { char: '足', meaning: '발 족', spell: '질풍 각', effectType: 'punch' },
+  { char: '住', meaning: '살 주', spell: '안전 가옥', effectType: 'magic' },
+  { char: '村', meaning: '마을 촌', spell: '촌장의 지혜', effectType: 'magic' },
+  { char: '孝', meaning: '효도 효', spell: '조상의 가호', effectType: 'heart' },
+  { char: '空', meaning: '빌 공', spell: '진공 흡수', effectType: 'magic' },
+  { char: '林', meaning: '수풀 림', spell: '가시 덩굴', effectType: 'earth' },
+  { char: '命', meaning: '목숨 명', spell: '생명력 흡수', effectType: 'heart' },
+  { char: '事', meaning: '일 사', spell: '사건의 지평선', effectType: 'magic' },
+  { char: '所', meaning: '바 소', spell: '공간 왜곡', effectType: 'magic' },
+
+  // --- 7급 난이도 6 (8~9획) ---
+  { char: '育', meaning: '기를 육', spell: '성장 촉진', effectType: 'heart' },
+  { char: '長', meaning: '긴 장', spell: '장창 찌르기', effectType: 'slash' },
+  { char: '直', meaning: '곧을 직', spell: '직선 레이저', effectType: 'explosion' },
+  { char: '靑', meaning: '푸를 청', spell: '푸른 뇌전', effectType: 'explosion' },
+  { char: '花', meaning: '꽃 화', spell: '꽃잎 소용돌이', effectType: 'magic' },
+  { char: '物', meaning: '만물 물', spell: '염동력 투척', effectType: 'magic' },
+  { char: '姓', meaning: '성 성', spell: '가문의 문장', effectType: 'magic' },
+  { char: '軍', meaning: '군사 군', spell: '병사 소환', effectType: 'magic' },
+  { char: '面', meaning: '낯 면', spell: '천의 얼굴', effectType: 'magic' },
+  { char: '食', meaning: '먹을 식', spell: '포만감 회복', effectType: 'heart' },
+
+  // --- 7급 난이도 7 (9~10획) ---
+  { char: '室', meaning: '집 실', spell: '밀실 감금', effectType: 'magic' },
+  { char: '前', meaning: '앞 전', spell: '전방 쇄도', effectType: 'slash' },
+  { char: '重', meaning: '무거울 중', spell: '중력장 생성', effectType: 'magic' },
+  { char: '便', meaning: '편할 편', spell: '순간 이동', effectType: 'magic' },
+  { char: '活', meaning: '살 활', spell: '활력의 샘', effectType: 'heart' },
+  { char: '後', meaning: '뒤 후', spell: '후방 기습', effectType: 'slash' },
+  { char: '洞', meaning: '골 동', spell: '심연의 동굴', effectType: 'earth' },
+  { char: '家', meaning: '집 가', spell: '가정의 축복', effectType: 'heart' },
+  { char: '校', meaning: '학교 교', spell: '배움의 결계', effectType: 'magic' },
+  { char: '氣', meaning: '기운 기', spell: '기공파', effectType: 'explosion' },
+
+  // --- 7급 난이도 8 (10~11획) ---
+  { char: '記', meaning: '기록할 기', spell: '역사의 기록', effectType: 'magic' },
+  { char: '時', meaning: '때 시', spell: '시간 정지', effectType: 'magic' },
+  { char: '祖', meaning: '할아비 조', spell: '수호령 소환', effectType: 'magic' },
+  { char: '草', meaning: '풀 초', spell: '맹독의 풀잎', effectType: 'water' },
+  { char: '海', meaning: '바다 해', spell: '해일 덮치기', effectType: 'water' },
+  { char: '紙', meaning: '종이 지', spell: '부적 폭발', effectType: 'explosion' },
+  { char: '敎', meaning: '가르칠 교', spell: '교훈의 채찍', effectType: 'slash' },
+  { char: '國', meaning: '나라 국', spell: '국가의 권위', effectType: 'magic' },
+  { char: '動', meaning: '움직일 동', spell: '지진파', effectType: 'earth' },
+  { char: '問', meaning: '물을 문', spell: '진실의 방', effectType: 'magic' },
+
+  // --- 7급 난이도 9 (12~13획) ---
+  { char: '間', meaning: '사이 간', spell: '공간 절단', effectType: 'slash' },
+  { char: '答', meaning: '대답 답', spell: '정답의 빛', effectType: 'magic' },
+  { char: '登', meaning: '오를 등', spell: '천상 계단', effectType: 'magic' },
+  { char: '然', meaning: '그럴 연', spell: '자연의 섭리', effectType: 'magic' },
+  { char: '場', meaning: '마당 장', spell: '투기장 생성', effectType: 'earth' },
+  { char: '植', meaning: '심을 식', spell: '생명의 씨앗', effectType: 'heart' },
+  { char: '道', meaning: '길 도', spell: '도의 경지', effectType: 'magic' },
+  { char: '電', meaning: '번개 전', spell: '체인 라이트닝', effectType: 'explosion' },
+  { char: '話', meaning: '말씀 화', spell: '최면의 화술', effectType: 'magic' },
+  { char: '農', meaning: '농사 농', spell: '풍요의 춤', effectType: 'heart' },
+
+  // --- 7급 난이도 10 (14~23획) ---
+  { char: '歌', meaning: '노래 가', spell: '세이렌의 노래', effectType: 'magic' },
+  { char: '旗', meaning: '기 기', spell: '사기 충전 깃발', effectType: 'heart' },
+  { char: '算', meaning: '셈 산', spell: '확률 계산 타격', effectType: 'punch' },
+  { char: '漢', meaning: '한나라 한', spell: '은하수 폭포', effectType: 'water' },
+  { char: '語', meaning: '말씀 어', spell: '언어의 장벽', effectType: 'magic' },
+  { char: '數', meaning: '셈 수', spell: '숫자 미로', effectType: 'magic' },
+  { char: '線', meaning: '줄 선', spell: '레이저 라인', effectType: 'magic' },
+  { char: '學', meaning: '배울 학', spell: '지식의 해일', effectType: 'water' },
+  { char: '韓', meaning: '한국 한', spell: '삼태극 폭발', effectType: 'explosion' },
+  { char: '體', meaning: '몸 체', spell: '강철의 육체', effectType: 'magic' },
 ];
