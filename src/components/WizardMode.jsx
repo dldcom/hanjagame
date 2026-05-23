@@ -223,14 +223,37 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
             <div className="wizard-battle-stage">
               
               {/* Player Participant */}
-              <div className="battle-participant player" style={{ position: 'relative' }}>
-                <motion.img 
-                  src={PLAYER_MONSTER?.imageUrl || '/player_monster.png'} 
-                  alt={PLAYER_MONSTER?.name || 'Player'}
-                  animate={{ y: [0, 5, 0] }}
-                  transition={{ y: { repeat: Infinity, duration: 2.5, ease: "easeInOut" } }}
-                  className="battle-avatar"
-                />
+              <div className="battle-participant player">
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <motion.img 
+                    src={PLAYER_MONSTER?.imageUrl || '/player_monster.png'} 
+                    alt={PLAYER_MONSTER?.name || 'Player'}
+                    animate={{ y: [0, 5, 0] }}
+                    transition={{ y: { repeat: Infinity, duration: 2.5, ease: "easeInOut" } }}
+                    className="battle-avatar"
+                  />
+                  {/* Hit effect on Player Avatar */}
+                  <AnimatePresence>
+                    {activeEffect && activeEffect.target === 'player' && (
+                      <motion.img 
+                        src={`/effect_${activeEffect.type}.png`}
+                        initial={{ scale: 0.5, opacity: 0 }}
+                        animate={{ scale: 1.3, opacity: 1 }}
+                        exit={{ scale: 1.6, opacity: 0 }}
+                        transition={{ duration: 0.5, type: 'spring' }}
+                        style={{
+                          position: 'absolute',
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain',
+                          pointerEvents: 'none',
+                          zIndex: 30
+                        }}
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    )}
+                  </AnimatePresence>
+                </div>
                 <div className="participant-info">
                   <span className="participant-name">{PLAYER_MONSTER?.name || '꼬마 마법사'}</span>
                   <div className="hp-bar-container">
@@ -241,45 +264,43 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
                     <span className="hp-text">{playerHp}/5</span>
                   </div>
                 </div>
-                
-                {/* Hit effect on Player */}
-                <AnimatePresence>
-                  {activeEffect && activeEffect.target === 'player' && (
-                    <motion.img 
-                      src={`/effect_${activeEffect.type}.png`}
-                      initial={{ scale: 0.5, opacity: 0 }}
-                      animate={{ scale: 1.2, opacity: 1 }}
-                      exit={{ scale: 1.5, opacity: 0 }}
-                      transition={{ duration: 0.5, type: 'spring' }}
-                      style={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: '80px',
-                        height: '80px',
-                        objectFit: 'contain',
-                        pointerEvents: 'none',
-                        zIndex: 30
-                      }}
-                      onError={(e) => { e.target.style.display = 'none'; }}
-                    />
-                  )}
-                </AnimatePresence>
               </div>
 
               {/* VS Text Divider */}
               <div className="battle-vs">VS</div>
 
               {/* Enemy Participant */}
-              <div className="battle-participant enemy" style={{ position: 'relative' }}>
-                <motion.img 
-                  src={selectedEnemy.imageUrl} 
-                  alt={selectedEnemy.name}
-                  animate={{ y: [0, -5, 0] }}
-                  transition={{ y: { repeat: Infinity, duration: 2, ease: "easeInOut" } }}
-                  className="battle-avatar"
-                />
+              <div className="battle-participant enemy">
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <motion.img 
+                    src={selectedEnemy.imageUrl} 
+                    alt={selectedEnemy.name}
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{ y: { repeat: Infinity, duration: 2, ease: "easeInOut" } }}
+                    className="battle-avatar"
+                  />
+                  {/* Hit effect on Enemy Avatar */}
+                  <AnimatePresence>
+                    {activeEffect && activeEffect.target === 'monster' && (
+                      <motion.img 
+                        src={`/effect_${activeEffect.type}.png`}
+                        initial={{ scale: 0.5, opacity: 0, rotate: -30 }}
+                        animate={{ scale: 1.3, opacity: 1, rotate: 0 }}
+                        exit={{ scale: 1.6, opacity: 0 }}
+                        transition={{ duration: 0.5, type: 'spring' }}
+                        style={{
+                          position: 'absolute',
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain',
+                          pointerEvents: 'none',
+                          zIndex: 30
+                        }}
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    )}
+                  </AnimatePresence>
+                </div>
                 <div className="participant-info">
                   <span className="participant-name">{selectedEnemy.name}</span>
                   <div className="hp-bar-container">
@@ -290,31 +311,6 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
                     <span className="hp-text">{monsterHp}/{selectedEnemy.maxHp}</span>
                   </div>
                 </div>
-
-                {/* Hit effect on Enemy */}
-                <AnimatePresence>
-                  {activeEffect && activeEffect.target === 'monster' && (
-                    <motion.img 
-                      src={`/effect_${activeEffect.type}.png`}
-                      initial={{ scale: 0.5, opacity: 0, rotate: -30 }}
-                      animate={{ scale: 1.2, opacity: 1, rotate: 0 }}
-                      exit={{ scale: 1.5, opacity: 0 }}
-                      transition={{ duration: 0.5, type: 'spring' }}
-                      style={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: '80px',
-                        height: '80px',
-                        objectFit: 'contain',
-                        pointerEvents: 'none',
-                        zIndex: 30
-                      }}
-                      onError={(e) => { e.target.style.display = 'none'; }}
-                    />
-                  )}
-                </AnimatePresence>
               </div>
             </div>
 
