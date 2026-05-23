@@ -1,40 +1,89 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import HanjaPad from './HanjaPad';
-import { LEVEL_8_HANJA } from '../data/hanjaData';
-import { getMonsterById, ENEMY_MONSTERS } from '../data/monsterData';
+import { LEVEL_8_HANJA, LEVEL_7_HANJA } from '../data/hanjaData';
+import { getMonsterById, ENEMY_MONSTERS, LEVEL7_ENEMY_MONSTERS } from '../data/monsterData';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const getRandomSpell = () => LEVEL_8_HANJA[Math.floor(Math.random() * LEVEL_8_HANJA.length)];
+const getSpellPool = (requiredLevel, grade = 8) => {
+  const sourceList = grade === 7 ? LEVEL_7_HANJA : LEVEL_8_HANJA;
+  if (!requiredLevel) return [...sourceList];
+  const itemsPerLevel = 10;
+  const minIdx = (requiredLevel - 1) * itemsPerLevel;
+  const maxIdx = Math.min(requiredLevel * itemsPerLevel, sourceList.length);
+  return sourceList.slice(minIdx, maxIdx);
+};
 
-export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUnlockedLevel8 }) {
+const shuffle = (arr) => {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+
+export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUnlockedLevel8, maxUnlockedLevel7 = 0 }) {
   const PLAYER_MONSTER = getMonsterById(activeMonsterId || 'water_dragon');
   const [selectedEnemy, setSelectedEnemy] = useState(null);
+  const [selectedGradeTab, setSelectedGradeTab] = useState(8);
 
   const [playerHp, setPlayerHp] = useState(5);
   const [monsterHp, setMonsterHp] = useState(1);
   const [turnState, setTurnState] = useState('player_attack'); 
-  
+  const [fakeSpell, setFakeSpell] = useState(null);
+  const [illusionOrder, setIllusionOrder] = useState(0);
+  const [droppedGoldenEgg, setDroppedGoldenEgg] = useState(false);
   const [currentSpell, setCurrentSpell] = useState(null); 
   const [dialogue, setDialogue] = useState(null); 
   const [dialogueQueue, setDialogueQueue] = useState([]); 
   const [activeEffect, setActiveEffect] = useState(null); 
-  
   const [currentMaxTime, setCurrentMaxTime] = useState(10);
   const [timeLeft, setTimeLeft] = useState(10);
+
+  const spellPoolRef = useRef([]);
+
+  const drawFromPool = (level, grade) => {
+    if (spellPoolRef.current.length === 0) {
+      spellPoolRef.current = shuffle(getSpellPool(level, grade));
+    }
+    return spellPoolRef.current.pop();
+  };
+
+  const rollSpells = (level, grade) => {
+    const real = drawFromPool(level, grade);
+    let fake = drawFromPool(level, grade);
+    if (fake.char === real.char) {
+      fake = drawFromPool(level, grade);
+      if (fake && fake.char === real.char) {
+        // 극단적인 경우: 풀에서 못 찾으면 랜덤 폴백
+        const pool = getSpellPool(level, grade);
+        fake = pool.find(s => s.char !== real.char) || pool[0];
+      }
+    }
+    if (!fake) {
+      const pool = getSpellPool(level, grade);
+      fake = pool.find(s => s.char !== real.char) || pool[0];
+    }
+    setCurrentSpell(real);
+    setFakeSpell(fake);
+    setIllusionOrder(Math.random() > 0.5 ? 1 : 0);
+  };
 
   const enqueueDialogue = useCallback((text, onFinished = null) => {
     setDialogueQueue(prev => [...prev, { text, onFinished }]);
   }, []);
 
-  const handleSelectEnemy = (enemy) => {
-    setSelectedEnemy(enemy);
+  const handleSelectEnemy = (enemy, grade) => {
+    setSelectedEnemy({ ...enemy, grade });
     setMonsterHp(enemy.maxHp);
     setPlayerHp(5);
     setTurnState('player_attack');
-    setCurrentSpell(getRandomSpell());
+    spellPoolRef.current = shuffle(getSpellPool(enemy.requiredLevel, grade));
+    rollSpells(enemy.requiredLevel, grade);
     setDialogue(`야생의 ${enemy.name}이(가) 나타났다! 내 턴이다, 공격하자!`);
     setDialogueQueue([]);
     setActiveEffect(null);
+    setDroppedGoldenEgg(false);
     setCurrentMaxTime(10);
     setTimeLeft(10);
   };
@@ -49,7 +98,7 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
   useEffect(() => {
     if (selectedEnemy && (turnState === 'player_attack' || turnState === 'monster_attack') && !dialogue && dialogueQueue.length === 0) {
       if (timeLeft <= 0) {
-        takeDamage();
+        takeDamage('앗! 시간 초과! 마법 시전에 실패했다!');
         return;
       }
       const timerId = setInterval(() => {
@@ -81,12 +130,12 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
         
         if (nextMonsterHp <= 0) {
           enqueueDialogue(`${selectedEnemy.name}을(를) 물리쳤다!`, () => {
-            if (onBattleWin) onBattleWin(activeMonsterId);
+            setDroppedGoldenEgg(false);
+            if (onBattleWin) onBattleWin(3, 20, false);
             setTurnState('end');
           });
         } else {
-          const nextSpell = getRandomSpell();
-          setCurrentSpell(nextSpell);
+          rollSpells(selectedEnemy.requiredLevel, selectedEnemy.grade);
           const nextTime = Math.max(5, currentMaxTime - 0.5); 
           setCurrentMaxTime(nextTime);
           setTimeLeft(nextTime);
@@ -101,8 +150,7 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
       
       enqueueDialogue(`[${currentSpell.meaning}] 완벽한 방어 마법 전개!`);
       enqueueDialogue(`${selectedEnemy.name}의 공격을 완벽하게 튕겨냈다!`, () => {
-        const nextSpell = getRandomSpell();
-        setCurrentSpell(nextSpell);
+        rollSpells(selectedEnemy.requiredLevel, selectedEnemy.grade);
         const nextTime = Math.max(5, currentMaxTime - 0.5); 
         setCurrentMaxTime(nextTime);
         setTimeLeft(nextTime);
@@ -113,16 +161,18 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
     }
   };
 
-  const takeDamage = () => {
-    enqueueDialogue('앗! 시간 초과! 마법 시전에 실패했다!');
+  const takeDamage = (reason = '앗! 시간 초과! 마법 시전에 실패했다!') => {
+    enqueueDialogue(reason);
     enqueueDialogue(`마법사가 공격을 받았다!`, () => {
       const nextPlayerHp = Math.max(0, playerHp - 1);
       setPlayerHp(nextPlayerHp);
       if (nextPlayerHp <= 0) {
         enqueueDialogue('눈앞이 깜깜해졌다...', () => setTurnState('end'));
       } else {
-        const nextSpell = getRandomSpell();
-        setCurrentSpell(nextSpell);
+        rollSpells(selectedEnemy.requiredLevel, selectedEnemy.grade);
+        const nextTime = Math.max(5, currentMaxTime - 0.5); 
+        setCurrentMaxTime(nextTime);
+        setTimeLeft(nextTime);
         if (turnState === 'player_attack') {
           enqueueDialogue(`${selectedEnemy.name}이(가) 반격한다! [${nextSpell.meaning}] 방패 마법을 준비해!`, () => {
              setTurnState('monster_attack');
@@ -142,17 +192,59 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
         <button className="secondary" onClick={onBack} style={{ alignSelf: 'flex-start', marginBottom: '2rem' }}>
           ← 마을로 돌아가기
         </button>
-        <h1 style={{ textAlign: 'center', color: 'var(--primary)', marginBottom: '2rem', textShadow: '2px 2px 0px var(--secondary)' }}>
+        <h1 style={{ textAlign: 'center', color: 'var(--primary)', marginBottom: '1rem', textShadow: '2px 2px 0px var(--secondary)' }}>
           전투할 몬스터를 선택하세요
         </h1>
+
+        {/* Grade Selection Tabs */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+          <button 
+            onClick={() => setSelectedGradeTab(8)}
+            style={{
+              padding: '0.8rem 2rem',
+              borderRadius: '20px',
+              fontWeight: 'bold',
+              background: selectedGradeTab === 8 ? 'var(--primary)' : '#e0e0e0',
+              color: selectedGradeTab === 8 ? 'white' : '#666',
+              boxShadow: selectedGradeTab === 8 ? '0 4px 10px rgba(0,0,0,0.2)' : 'none',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            8급 몬스터 (초보)
+          </button>
+          <button 
+            onClick={() => {
+              if (maxUnlockedLevel8 < 5) {
+                alert('8급의 모든 난이도(1~5)를 다 깨야 7급 몬스터에 도전할 수 있습니다!');
+              } else {
+                setSelectedGradeTab(7);
+              }
+            }}
+            style={{
+              padding: '0.8rem 2rem',
+              borderRadius: '20px',
+              fontWeight: 'bold',
+              background: selectedGradeTab === 7 ? 'var(--accent)' : '#e0e0e0',
+              color: selectedGradeTab === 7 ? '#4A4E69' : '#999',
+              boxShadow: selectedGradeTab === 7 ? '0 4px 10px rgba(0,0,0,0.2)' : 'none',
+              border: 'none',
+              cursor: maxUnlockedLevel8 >= 5 ? 'pointer' : 'not-allowed',
+              opacity: maxUnlockedLevel8 >= 5 ? 1 : 0.6
+            }}
+          >
+            {maxUnlockedLevel8 >= 5 ? '7급 몬스터 (정예)' : '🔒 7급 몬스터'}
+          </button>
+        </div>
+        
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center' }}>
-          {ENEMY_MONSTERS.map((enemy) => {
-            const isUnlocked = maxUnlockedLevel8 >= enemy.requiredLevel;
+          {(selectedGradeTab === 8 ? ENEMY_MONSTERS : LEVEL7_ENEMY_MONSTERS).map((enemy) => {
+            const isUnlocked = selectedGradeTab === 8 ? (maxUnlockedLevel8 >= enemy.requiredLevel) : (maxUnlockedLevel7 >= enemy.requiredLevel);
             return (
               <div 
                 key={enemy.id}
                 className="card"
-                onClick={() => isUnlocked && handleSelectEnemy(enemy)}
+                onClick={() => isUnlocked && handleSelectEnemy(enemy, selectedGradeTab)}
                 style={{
                   width: '200px',
                   textAlign: 'center',
@@ -174,7 +266,7 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
                 </div>
                 {!isUnlocked && (
                   <div style={{ marginTop: '0.5rem', color: '#666', fontSize: '0.9rem', fontWeight: 'bold' }}>
-                    (8급 난이도 {enemy.requiredLevel} 클리어 필요)
+                    ({selectedGradeTab}급 난이도 {enemy.requiredLevel} 클리어 필요)
                   </div>
                 )}
               </div>
@@ -197,7 +289,8 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
           {playerHp > 0 && (
             <div style={{ margin: '2rem 0', fontSize: '1.5rem', color: 'var(--primary)', fontWeight: 'bold' }}>
               <p>🎁 몬스터 알 조각 +3 획득!</p>
-              <p>✨ 경험치 +10 획득!!</p>
+              <p>✨ 경험치 +20 획득!!</p>
+              {droppedGoldenEgg && <p style={{color: '#FFD700', marginTop: '1rem', textShadow: '1px 1px 2px #000'}}>🌟 황금 알 조각 +1 획득! 🌟</p>}
             </div>
           )}
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
@@ -348,21 +441,54 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
                 />
               </div>
 
-              {currentSpell && (
+              {currentSpell && fakeSpell && (
                 <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <h3 className="spell-text" style={{ zIndex: 10, fontSize: '1.6rem', marginBottom: '0.5rem' }}>
                     {turnState === 'player_attack' ? `공격 마법: ${currentSpell.meaning}` : `방패 마법: ${currentSpell.meaning}`}
                   </h3>
-                  <div className="wizard-hanja-wrapper" style={{ pointerEvents: dialogue ? 'none' : 'auto', opacity: dialogue ? 0.5 : 1 }}>
-                    <HanjaPad 
-                      key={`${turnState}-${currentSpell.char}-${monsterHp}-${playerHp}`}
-                      character={currentSpell.char} 
-                      onComplete={handleComplete} 
-                      onMistake={() => {}}
-                      hideHint={true}
-                      faintOutline={true}
-                      showOutline={true}
-                    />
+
+                  <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center' }}>
+                    
+                    {illusionOrder === 1 && (
+                      <div className="wizard-hanja-wrapper" style={{ position: 'relative', pointerEvents: dialogue ? 'none' : 'auto', opacity: dialogue ? 0.5 : 1 }}>
+                        <HanjaPad 
+                          key={`fake-${turnState}-${fakeSpell.char}-${monsterHp}-${playerHp}`}
+                          character={fakeSpell.char} 
+                          onComplete={() => takeDamage('환영에 속아 가짜 마법을 건드렸다!')} 
+                          onMistake={() => {}}
+                          hideHint={true}
+                          faintOutline={true}
+                          showOutline={true}
+                        />
+                      </div>
+                    )}
+
+                    <div className="wizard-hanja-wrapper" style={{ position: 'relative', pointerEvents: dialogue ? 'none' : 'auto', opacity: dialogue ? 0.5 : 1 }}>
+                      <HanjaPad 
+                        key={`real-${turnState}-${currentSpell.char}-${monsterHp}-${playerHp}`}
+                        character={currentSpell.char} 
+                        onComplete={handleComplete} 
+                        onMistake={() => {}}
+                        hideHint={true}
+                        faintOutline={true}
+                        showOutline={true}
+                      />
+                    </div>
+                    
+                    {illusionOrder === 0 && (
+                      <div className="wizard-hanja-wrapper" style={{ position: 'relative', pointerEvents: dialogue ? 'none' : 'auto', opacity: dialogue ? 0.5 : 1 }}>
+                        <HanjaPad 
+                          key={`fake-${turnState}-${fakeSpell.char}-${monsterHp}-${playerHp}`}
+                          character={fakeSpell.char} 
+                          onComplete={() => takeDamage('환영에 속아 가짜 마법을 건드렸다!')} 
+                          onMistake={() => {}}
+                          hideHint={true}
+                          faintOutline={true}
+                          showOutline={true}
+                        />
+                      </div>
+                    )}
+
                   </div>
                 </div>
               )}

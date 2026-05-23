@@ -57,6 +57,7 @@ function App() {
   // Gacha States
   const [practiceCount, setPracticeCount] = useState(() => parseInt(localStorage.getItem('practiceCount') || '0'));
   const [eggPieces, setEggPieces] = useState(() => parseInt(localStorage.getItem('eggPieces') || '0'));
+  const [goldenEggPieces, setGoldenEggPieces] = useState(() => parseInt(localStorage.getItem('goldenEggPieces') || '0'));
   const [ownedMonsters, setOwnedMonsters] = useState(() => {
     const saved = localStorage.getItem('ownedMonsters');
     return saved ? JSON.parse(saved) : ['water_dragon'];
@@ -122,9 +123,33 @@ function App() {
   useEffect(() => {
     localStorage.setItem('practiceCount', practiceCount);
     localStorage.setItem('eggPieces', eggPieces);
+    localStorage.setItem('goldenEggPieces', goldenEggPieces);
     localStorage.setItem('ownedMonsters', JSON.stringify(ownedMonsters));
     localStorage.setItem('activeMonsterId', activeMonsterId);
-  }, [practiceCount, eggPieces, ownedMonsters, activeMonsterId]);
+  }, [practiceCount, eggPieces, goldenEggPieces, ownedMonsters, activeMonsterId]);
+
+  // Test Gift Logic for specific student
+  useEffect(() => {
+    if (currentProfile && 
+        currentProfile.school_name === '서울초등학교' && 
+        currentProfile.grade === 3 && 
+        currentProfile.class_name === '1반' && 
+        currentProfile.student_number === 15) {
+      if (!localStorage.getItem('testGoldenEggGiven')) {
+        setGoldenEggPieces(prev => prev + 100);
+        localStorage.setItem('testGoldenEggGiven', 'true');
+        setTimeout(() => customAlert('🎁 [테스트] 서울초등학교 3학년 1반 15번 학생에게 황금알 100개가 지급되었습니다!'), 1000);
+      }
+      if (!localStorage.getItem('testUnlockGiven')) {
+        setMaxUnlockedLevel8(5);
+        localStorage.setItem('maxUnlockedLevel8', '5');
+        setMaxUnlockedLevel7(10);
+        localStorage.setItem('maxUnlockedLevel7', '10');
+        localStorage.setItem('testUnlockGiven', 'true');
+        setTimeout(() => customAlert('🔓 [테스트] 8급/7급 모든 난이도와 몬스터 잠금이 해제되었습니다!'), 2000);
+      }
+    }
+  }, [currentProfile]);
 
   const handleModeChange = (newMode) => {
     if (newMode === 'menu' || newMode === 'leaderboard') {
@@ -219,9 +244,12 @@ function App() {
     }
   };
 
-  const handleBattleWin = () => {
-    setEggPieces(prev => prev + 3);
-    gainExp(10); // 배틀 이기면 +10 EXP
+  const handleBattleWin = (earnedEggs, earnedExp, droppedGoldenEgg) => {
+    setEggPieces(prev => prev + earnedEggs);
+    if (droppedGoldenEgg) {
+      setGoldenEggPieces(prev => prev + 1);
+    }
+    gainExp(earnedExp);
   };
 
   if (!playerId) {
@@ -399,6 +427,7 @@ function App() {
           activeMonsterId={activeMonsterId}
           onBattleWin={handleBattleWin}
           maxUnlockedLevel8={maxUnlockedLevel8}
+          maxUnlockedLevel7={maxUnlockedLevel7}
         />
       )}
       
@@ -407,6 +436,8 @@ function App() {
           onBack={() => handleModeChange('menu')}
           eggPieces={eggPieces}
           setEggPieces={setEggPieces}
+          goldenEggPieces={goldenEggPieces}
+          setGoldenEggPieces={setGoldenEggPieces}
           ownedMonsters={ownedMonsters}
           setOwnedMonsters={setOwnedMonsters}
           activeMonsterId={activeMonsterId}

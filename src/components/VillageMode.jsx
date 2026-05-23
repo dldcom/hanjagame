@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { PLAYER_MONSTERS, getMonsterById } from '../data/monsterData';
+import { PLAYER_MONSTERS, getMonsterById, HIDDEN_MONSTERS } from '../data/monsterData';
 
 export default function VillageMode({ 
   onBack, 
   eggPieces, 
   setEggPieces, 
+  goldenEggPieces,
+  setGoldenEggPieces,
   ownedMonsters, 
   setOwnedMonsters,
   activeMonsterId,
@@ -36,13 +38,36 @@ export default function VillageMode({
     }, 1500);
   };
 
+  const handleGoldenHatch = () => {
+    if (goldenEggPieces < 10 || hatching) return;
+
+    const unownedHidden = HIDDEN_MONSTERS.filter(m => !ownedMonsters.includes(m.id));
+
+    if (unownedHidden.length === 0) {
+      alert("이미 모든 히든 몬스터를 획득하셨습니다!");
+      return;
+    }
+
+    setGoldenEggPieces(prev => prev - 10);
+    setHatching(true);
+    setHatchResult(null);
+
+    setTimeout(() => {
+      const randomHidden = unownedHidden[Math.floor(Math.random() * unownedHidden.length)];
+      setOwnedMonsters(prev => [...prev, randomHidden.id]);
+      setHatchResult(randomHidden);
+      setHatching(false);
+    }, 2500);
+  };
+
   return (
     <div className="village-container">
       <header style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', marginBottom: '2rem' }}>
         <button className="secondary" onClick={onBack}>← 메인으로</button>
         <h1 style={{ fontSize: '2.5rem', color: 'var(--primary)', margin: 0 }}>🏡 한자 마을</h1>
-        <div className="card" style={{ padding: '0.5rem 1rem', width: 'auto' }}>
-          <span style={{ fontWeight: 'bold' }}>알 조각: {eggPieces}개</span>
+        <div className="card" style={{ padding: '0.5rem 1rem', width: 'auto', display: 'flex', gap: '1rem' }}>
+          <span style={{ fontWeight: 'bold' }}>🥚 알 조각: {eggPieces}개</span>
+          <span style={{ fontWeight: 'bold', color: '#B8860B' }}>🌟 황금 알 조각: {goldenEggPieces}개</span>
         </div>
       </header>
 
@@ -74,13 +99,29 @@ export default function VillageMode({
               >
                 🥚
               </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', padding: '0 2rem' }}>
               <button 
                 onClick={handleHatch} 
                 disabled={eggPieces < 10 || hatching}
                 style={{ background: eggPieces >= 10 ? 'var(--accent)' : '#ccc', color: '#333' }}
               >
-                {hatching ? '부화하는 중...' : '알 부화하기 (-10 조각)'}
+                {hatching ? '부화하는 중...' : '🥚 일반 알 부화 (-10 조각)'}
               </button>
+              
+              <button 
+                onClick={handleGoldenHatch} 
+                disabled={goldenEggPieces < 10 || hatching || HIDDEN_MONSTERS.every(m => ownedMonsters.includes(m.id))}
+                style={{ 
+                  background: goldenEggPieces >= 10 && !HIDDEN_MONSTERS.every(m => ownedMonsters.includes(m.id)) ? 'linear-gradient(45deg, #FFD700, #FFA500)' : '#ccc', 
+                  color: goldenEggPieces >= 10 ? '#fff' : '#666',
+                  boxShadow: goldenEggPieces >= 10 ? '0 4px 15px rgba(255, 215, 0, 0.4)' : 'none',
+                  border: 'none',
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.3)'
+                }}
+              >
+                {hatching ? '부화하는 중...' : HIDDEN_MONSTERS.every(m => ownedMonsters.includes(m.id)) ? '🌟 히든 몬스터 획득 완료' : '🌟 황금 알 부화 (-10 조각)'}
+              </button>
+            </div>
             </div>
           )}
         </div>
@@ -89,7 +130,7 @@ export default function VillageMode({
         <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto', maxHeight: '70vh' }}>
           <h2 style={{ marginBottom: '1rem', color: 'var(--text-main)', textAlign: 'center' }}>내 몬스터 도감</h2>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            {PLAYER_MONSTERS.map(baseMonster => {
+            {[...PLAYER_MONSTERS, ...HIDDEN_MONSTERS].map(baseMonster => {
               const isOwned = ownedMonsters.includes(baseMonster.id);
               const isActive = activeMonsterId === baseMonster.id;
               // Get evolved form if applicable
