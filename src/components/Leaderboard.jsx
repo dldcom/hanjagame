@@ -65,13 +65,6 @@ function Leaderboard({ onBack, currentProfile }) {
           >
             우리 학교
           </button>
-          <button 
-            className={filter === 'all' ? '' : 'secondary'} 
-            onClick={() => setFilter('all')}
-            style={{ flex: 1, padding: '0.5rem' }}
-          >
-            전체
-          </button>
         </div>
 
         {loading ? (

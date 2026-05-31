@@ -32,7 +32,6 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
   const [turnState, setTurnState] = useState('player_attack'); 
   const [fakeSpell, setFakeSpell] = useState(null);
   const [illusionOrder, setIllusionOrder] = useState(0);
-  const [droppedGoldenEgg, setDroppedGoldenEgg] = useState(false);
   const [currentSpell, setCurrentSpell] = useState(null); 
   const [dialogue, setDialogue] = useState(null); 
   const [dialogueQueue, setDialogueQueue] = useState([]); 
@@ -73,6 +72,15 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
     setDialogueQueue(prev => [...prev, { text, onFinished }]);
   }, []);
 
+  const getBattleRewards = () => {
+    const reqLevel = selectedEnemy?.requiredLevel || 1;
+    let eggReward = 1;
+    if (reqLevel >= 4 && reqLevel <= 6) eggReward = 2;
+    else if (reqLevel >= 7 && reqLevel <= 9) eggReward = 3;
+    else if (reqLevel >= 10) eggReward = 5;
+    return { eggReward, expReward: reqLevel * 10 };
+  };
+
   const handleSelectEnemy = (enemy, grade) => {
     setSelectedEnemy({ ...enemy, grade });
     setMonsterHp(enemy.maxHp);
@@ -83,7 +91,6 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
     setDialogue(`야생의 ${enemy.name}이(가) 나타났다! 내 턴이다, 공격하자!`);
     setDialogueQueue([]);
     setActiveEffect(null);
-    setDroppedGoldenEgg(false);
     setCurrentMaxTime(10);
     setTimeLeft(10);
   };
@@ -130,8 +137,8 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
         
         if (nextMonsterHp <= 0) {
           enqueueDialogue(`${selectedEnemy.name}을(를) 물리쳤다!`, () => {
-            setDroppedGoldenEgg(false);
-            if (onBattleWin) onBattleWin(3, 20, false);
+            const { eggReward, expReward } = getBattleRewards();
+            if (onBattleWin) onBattleWin(eggReward, expReward);
             setTurnState('end');
           });
         } else {
@@ -286,13 +293,15 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
       {turnState === 'end' && (
         <div className="card" style={{ textAlign: 'center', padding: '4rem', marginTop: '10vh' }}>
           <h1 style={{ fontSize: '3rem' }}>{playerHp > 0 ? '🎉 전투 승리!' : '😭 전투 패배...'}</h1>
-          {playerHp > 0 && (
-            <div style={{ margin: '2rem 0', fontSize: '1.5rem', color: 'var(--primary)', fontWeight: 'bold' }}>
-              <p>🎁 몬스터 알 조각 +3 획득!</p>
-              <p>✨ 경험치 +20 획득!!</p>
-              {droppedGoldenEgg && <p style={{color: '#FFD700', marginTop: '1rem', textShadow: '1px 1px 2px #000'}}>🌟 황금 알 조각 +1 획득! 🌟</p>}
-            </div>
-          )}
+          {playerHp > 0 && (() => {
+            const { eggReward, expReward } = getBattleRewards();
+            return (
+              <div style={{ margin: '2rem 0', fontSize: '1.5rem', color: 'var(--primary)', fontWeight: 'bold' }}>
+                <p>🎁 몬스터 알 조각 +{eggReward} 획득!</p>
+                <p>✨ 경험치 +{expReward} 획득!!</p>
+              </div>
+            );
+          })()}
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
             <button onClick={() => setSelectedEnemy(null)}>다른 몬스터 선택</button>
             <button className="secondary" onClick={onBack}>마 마을로 돌아가기</button>
@@ -319,7 +328,7 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
               <div className="battle-participant player">
                 <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <motion.img 
-                    src={PLAYER_MONSTER?.imageUrl || '/player_monster.png'} 
+                    src={PLAYER_MONSTER?.imageUrl || '/player_monster.webp'} 
                     alt={PLAYER_MONSTER?.name || 'Player'}
                     animate={{ y: [0, 5, 0] }}
                     transition={{ y: { repeat: Infinity, duration: 2.5, ease: "easeInOut" } }}
@@ -329,7 +338,7 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
                   <AnimatePresence>
                     {activeEffect && activeEffect.target === 'player' && (
                       <motion.img 
-                        src={`/effect_${activeEffect.type}.png`}
+                        src={`/effect_${activeEffect.type}.webp`}
                         initial={{ scale: 0.5, opacity: 0 }}
                         animate={{ scale: 1.3, opacity: 1 }}
                         exit={{ scale: 1.6, opacity: 0 }}
@@ -376,7 +385,7 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
                   <AnimatePresence>
                     {activeEffect && activeEffect.target === 'monster' && (
                       <motion.img 
-                        src={`/effect_${activeEffect.type}.png`}
+                        src={`/effect_${activeEffect.type}.webp`}
                         initial={{ scale: 0.5, opacity: 0, rotate: -30 }}
                         animate={{ scale: 1.3, opacity: 1, rotate: 0 }}
                         exit={{ scale: 1.6, opacity: 0 }}

@@ -57,7 +57,6 @@ function App() {
   // Gacha States
   const [practiceCount, setPracticeCount] = useState(() => parseInt(localStorage.getItem('practiceCount') || '0'));
   const [eggPieces, setEggPieces] = useState(() => parseInt(localStorage.getItem('eggPieces') || '0'));
-  const [goldenEggPieces, setGoldenEggPieces] = useState(() => parseInt(localStorage.getItem('goldenEggPieces') || '0'));
   const [ownedMonsters, setOwnedMonsters] = useState(() => {
     const saved = localStorage.getItem('ownedMonsters');
     return saved ? JSON.parse(saved) : ['water_dragon'];
@@ -123,10 +122,9 @@ function App() {
   useEffect(() => {
     localStorage.setItem('practiceCount', practiceCount);
     localStorage.setItem('eggPieces', eggPieces);
-    localStorage.setItem('goldenEggPieces', goldenEggPieces);
     localStorage.setItem('ownedMonsters', JSON.stringify(ownedMonsters));
     localStorage.setItem('activeMonsterId', activeMonsterId);
-  }, [practiceCount, eggPieces, goldenEggPieces, ownedMonsters, activeMonsterId]);
+  }, [practiceCount, eggPieces, ownedMonsters, activeMonsterId]);
 
   // Test Gift Logic for specific student
   useEffect(() => {
@@ -135,11 +133,6 @@ function App() {
         currentProfile.grade === 3 && 
         currentProfile.class_name === '1반' && 
         currentProfile.student_number === 15) {
-      if (!localStorage.getItem('testGoldenEggGiven')) {
-        setGoldenEggPieces(prev => prev + 100);
-        localStorage.setItem('testGoldenEggGiven', 'true');
-        setTimeout(() => customAlert('🎁 [테스트] 서울초등학교 3학년 1반 15번 학생에게 황금알 100개가 지급되었습니다!'), 1000);
-      }
       if (!localStorage.getItem('testUnlockGiven')) {
         setMaxUnlockedLevel8(5);
         localStorage.setItem('maxUnlockedLevel8', '5');
@@ -205,7 +198,7 @@ function App() {
     gainExp(1); // 한자 쓰면 +1 EXP
 
     const newCount = practiceCount + 1;
-    if (newCount >= 10) {
+    if (newCount >= 20) {
       setPracticeCount(0);
       setEggPieces(prev => prev + 1);
       customAlert('축하합니다! 몬스터 알 조각 1개를 획득했어요!');
@@ -244,11 +237,8 @@ function App() {
     }
   };
 
-  const handleBattleWin = (earnedEggs, earnedExp, droppedGoldenEgg) => {
+  const handleBattleWin = (earnedEggs, earnedExp) => {
     setEggPieces(prev => prev + earnedEggs);
-    if (droppedGoldenEgg) {
-      setGoldenEggPieces(prev => prev + 1);
-    }
     gainExp(earnedExp);
   };
 
@@ -316,10 +306,10 @@ function App() {
             <div className="card practice-info-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 'auto' }}>
               <div className="info-card-full" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <span style={{ fontWeight: 'bold' }}>알 조각: {eggPieces}개</span>
-                <span style={{ fontSize: '0.9rem' }}>진척도: {practiceCount}/10</span>
+                <span style={{ fontSize: '0.9rem' }}>진척도: {practiceCount}/20</span>
               </div>
               <div className="info-card-short">
-                🥚 {eggPieces}개 | 📈 {practiceCount}/10
+                🥚 {eggPieces}개 | 📈 {practiceCount}/20
               </div>
             </div>
           </header>
@@ -436,8 +426,6 @@ function App() {
           onBack={() => handleModeChange('menu')}
           eggPieces={eggPieces}
           setEggPieces={setEggPieces}
-          goldenEggPieces={goldenEggPieces}
-          setGoldenEggPieces={setGoldenEggPieces}
           ownedMonsters={ownedMonsters}
           setOwnedMonsters={setOwnedMonsters}
           activeMonsterId={activeMonsterId}

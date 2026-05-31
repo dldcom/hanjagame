@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { PLAYER_MONSTERS, getMonsterById, HIDDEN_MONSTERS } from '../data/monsterData';
+import { PLAYER_MONSTERS, getMonsterById } from '../data/monsterData';
 
 export default function VillageMode({ 
   onBack, 
   eggPieces, 
   setEggPieces, 
-  goldenEggPieces,
-  setGoldenEggPieces,
   ownedMonsters, 
   setOwnedMonsters,
   activeMonsterId,
@@ -16,7 +14,7 @@ export default function VillageMode({
   const [hatchResult, setHatchResult] = useState(null);
 
   const handleHatch = () => {
-    if (eggPieces < 10 || hatching) return;
+    if (eggPieces < 20 || hatching) return;
 
     const unowned = PLAYER_MONSTERS.filter(m => !ownedMonsters.includes(m.id));
     
@@ -25,7 +23,7 @@ export default function VillageMode({
       return;
     }
 
-    setEggPieces(prev => prev - 10);
+    setEggPieces(prev => prev - 20);
     setHatching(true);
     setHatchResult(null);
 
@@ -38,28 +36,6 @@ export default function VillageMode({
     }, 1500);
   };
 
-  const handleGoldenHatch = () => {
-    if (goldenEggPieces < 10 || hatching) return;
-
-    const unownedHidden = HIDDEN_MONSTERS.filter(m => !ownedMonsters.includes(m.id));
-
-    if (unownedHidden.length === 0) {
-      alert("이미 모든 히든 몬스터를 획득하셨습니다!");
-      return;
-    }
-
-    setGoldenEggPieces(prev => prev - 10);
-    setHatching(true);
-    setHatchResult(null);
-
-    setTimeout(() => {
-      const randomHidden = unownedHidden[Math.floor(Math.random() * unownedHidden.length)];
-      setOwnedMonsters(prev => [...prev, randomHidden.id]);
-      setHatchResult(randomHidden);
-      setHatching(false);
-    }, 2500);
-  };
-
   return (
     <div className="village-container">
       <header style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', marginBottom: '2rem' }}>
@@ -67,7 +43,6 @@ export default function VillageMode({
         <h1 style={{ fontSize: '2.5rem', color: 'var(--primary)', margin: 0 }}>🏡 한자 마을</h1>
         <div className="card" style={{ padding: '0.5rem 1rem', width: 'auto', display: 'flex', gap: '1rem' }}>
           <span style={{ fontWeight: 'bold' }}>🥚 알 조각: {eggPieces}개</span>
-          <span style={{ fontWeight: 'bold', color: '#B8860B' }}>🌟 황금 알 조각: {goldenEggPieces}개</span>
         </div>
       </header>
 
@@ -76,7 +51,7 @@ export default function VillageMode({
         {/* Left Side: Gacha System */}
         <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', minHeight: '300px' }}>
           <h2 style={{ marginBottom: '1rem', color: 'var(--text-main)' }}>몬스터 뽑기</h2>
-          <p style={{ marginBottom: '2rem', textAlign: 'center' }}>알 조각 10개로 몬스터 알을 부화시키세요!</p>
+          <p style={{ marginBottom: '2rem', textAlign: 'center' }}>알 조각 20개로 몬스터 알을 부화시키세요!</p>
 
           {hatchResult && !hatching ? (
             <div style={{ textAlign: 'center', animation: 'bounce 0.5s' }}>
@@ -93,8 +68,8 @@ export default function VillageMode({
                   fontSize: '6rem', 
                   marginBottom: '1rem', 
                   animation: hatching ? 'shake 0.5s infinite' : 'none',
-                  filter: eggPieces >= 10 ? 'none' : 'grayscale(100%)',
-                  opacity: eggPieces >= 10 ? 1 : 0.5
+                  filter: eggPieces >= 20 ? 'none' : 'grayscale(100%)',
+                  opacity: eggPieces >= 20 ? 1 : 0.5
                 }}
               >
                 🥚
@@ -102,24 +77,10 @@ export default function VillageMode({
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', padding: '0 2rem' }}>
               <button 
                 onClick={handleHatch} 
-                disabled={eggPieces < 10 || hatching}
-                style={{ background: eggPieces >= 10 ? 'var(--accent)' : '#ccc', color: '#333' }}
+                disabled={eggPieces < 20 || hatching}
+                style={{ background: eggPieces >= 20 ? 'var(--accent)' : '#ccc', color: '#333' }}
               >
-                {hatching ? '부화하는 중...' : '🥚 일반 알 부화 (-10 조각)'}
-              </button>
-              
-              <button 
-                onClick={handleGoldenHatch} 
-                disabled={goldenEggPieces < 10 || hatching || HIDDEN_MONSTERS.every(m => ownedMonsters.includes(m.id))}
-                style={{ 
-                  background: goldenEggPieces >= 10 && !HIDDEN_MONSTERS.every(m => ownedMonsters.includes(m.id)) ? 'linear-gradient(45deg, #FFD700, #FFA500)' : '#ccc', 
-                  color: goldenEggPieces >= 10 ? '#fff' : '#666',
-                  boxShadow: goldenEggPieces >= 10 ? '0 4px 15px rgba(255, 215, 0, 0.4)' : 'none',
-                  border: 'none',
-                  textShadow: '1px 1px 2px rgba(0,0,0,0.3)'
-                }}
-              >
-                {hatching ? '부화하는 중...' : HIDDEN_MONSTERS.every(m => ownedMonsters.includes(m.id)) ? '🌟 히든 몬스터 획득 완료' : '🌟 황금 알 부화 (-10 조각)'}
+                {hatching ? '부화하는 중...' : '🥚 일반 알 부화 (-20 조각)'}
               </button>
             </div>
             </div>
@@ -130,7 +91,7 @@ export default function VillageMode({
         <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto', maxHeight: '70vh' }}>
           <h2 style={{ marginBottom: '1rem', color: 'var(--text-main)', textAlign: 'center' }}>내 몬스터 도감</h2>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            {[...PLAYER_MONSTERS, ...HIDDEN_MONSTERS].map(baseMonster => {
+            {PLAYER_MONSTERS.map(baseMonster => {
               const isOwned = ownedMonsters.includes(baseMonster.id);
               const isActive = activeMonsterId === baseMonster.id;
               // Get evolved form if applicable
