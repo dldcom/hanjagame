@@ -443,10 +443,15 @@ function App() {
       {/* Custom Alert Modal */}
       {alertMessage && (
         <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, height: '100dvh',
           backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex',
           justifyContent: 'center', alignItems: 'center', zIndex: 9999,
-          backdropFilter: 'blur(2px)'
+          backdropFilter: 'blur(2px)',
+          paddingTop: 'env(safe-area-inset-top)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+          paddingLeft: 'env(safe-area-inset-left)',
+          paddingRight: 'env(safe-area-inset-right)',
+          boxSizing: 'border-box'
         }}>
           <div className="card" style={{ 
             padding: '2.5rem', 

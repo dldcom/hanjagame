@@ -57,7 +57,7 @@ function ProfileSetup({ onComplete }) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100dvh', padding: '20px' }}>
       <div className="card" style={{ width: '100%', maxWidth: '400px', padding: '2rem' }}>
         <h2 style={{ textAlign: 'center', color: 'var(--primary)', marginBottom: '1.5rem' }}>입학 신청서</h2>
         <p style={{ textAlign: 'center', marginBottom: '2rem', color: 'var(--text-secondary)' }}>
