@@ -284,9 +284,24 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
     );
   }
 
+  const isBattling = selectedEnemy && turnState !== 'end';
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '1000px', margin: '0 auto', minHeight: '90vh' }}>
-      <button className="secondary" onClick={() => setSelectedEnemy(null)} style={{ alignSelf: 'flex-start', marginBottom: '1rem', zIndex: 10 }}>
+    <div style={{ 
+      display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '1000px', margin: '0 auto',
+      ...(isBattling ? {
+        position: 'fixed',
+        top: 'env(safe-area-inset-top)',
+        bottom: 'env(safe-area-inset-bottom)',
+        left: 0,
+        right: 0,
+        padding: '1rem',
+        zIndex: 50,
+        backgroundColor: 'var(--background)',
+        overflow: 'hidden'
+      } : { minHeight: '90vh' })
+    }}>
+      <button className="secondary" onClick={() => setSelectedEnemy(null)} style={{ alignSelf: 'flex-start', marginBottom: '1rem', zIndex: 10, flexShrink: 0 }}>
         ← 도망치기
       </button>
 
@@ -316,13 +331,15 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
           height: '100%',
           overflow: 'hidden',
           position: 'relative',
-          padding: 0
+          padding: 0,
+          flex: 1,
+          minHeight: 0
         }}>
           
-          <div className="wizard-battle-container">
+          <div className="wizard-battle-container" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             
             {/* 1. Battle Stage (Top Section) */}
-            <div className="wizard-battle-stage">
+            <div className="wizard-battle-stage" style={{ flexShrink: 0 }}>
               
               {/* Player Participant */}
               <div className="battle-participant player">
@@ -417,7 +434,7 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
             </div>
 
             {/* 2. Action Area (Bottom Section) */}
-            <div className="wizard-action-stage">
+            <div className="wizard-action-stage" style={{ flex: 1, minHeight: 0, justifyContent: 'center' }}>
               
               <AnimatePresence>
                 {dialogue && (
