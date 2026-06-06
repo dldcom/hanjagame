@@ -301,7 +301,7 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
         overflow: 'hidden'
       } : { minHeight: '90vh' })
     }}>
-      <button className="secondary" onClick={() => setSelectedEnemy(null)} style={{ alignSelf: 'flex-start', marginBottom: '1rem', zIndex: 10, flexShrink: 0 }}>
+      <button className="secondary" onClick={() => setSelectedEnemy(null)} style={{ alignSelf: 'flex-start', marginBottom: '0.5rem', zIndex: 10, flexShrink: 0, padding: '8px 16px', fontSize: '1rem' }}>
         ← 도망치기
       </button>
 
@@ -459,7 +459,7 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
                 )}
               </AnimatePresence>
 
-              <div style={{ width: '90%', height: '12px', background: '#ccc', borderRadius: '6px', overflow: 'hidden', marginBottom: '1rem' }}>
+              <div style={{ width: '90%', height: '8px', background: '#ccc', borderRadius: '4px', overflow: 'hidden', marginBottom: '0.5rem', flexShrink: 0 }}>
                 <motion.div 
                   animate={{ width: `${(timeLeft / currentMaxTime) * 100}%` }}
                   style={{ height: '100%', background: timeLeft <= (currentMaxTime * 0.5) ? 'var(--error)' : 'var(--accent)' }}
@@ -469,7 +469,7 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
 
               {currentSpell && fakeSpell && (
                 <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <h3 className="spell-text" style={{ zIndex: 10, fontSize: '1.6rem', marginBottom: '0.5rem' }}>
+                  <h3 className="spell-text" style={{ zIndex: 10, fontSize: '1.2rem', marginBottom: '0.2rem', marginTop: 0 }}>
                     {turnState === 'player_attack' ? `공격 마법: ${currentSpell.meaning}` : `방패 마법: ${currentSpell.meaning}`}
                   </h3>
 
