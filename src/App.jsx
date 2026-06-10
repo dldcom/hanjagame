@@ -62,6 +62,9 @@ function App() {
     return saved ? JSON.parse(saved) : ['water_dragon'];
   });
   const [activeMonsterId, setActiveMonsterId] = useState(() => localStorage.getItem('activeMonsterId') || 'water_dragon');
+  
+  const [mana, setMana] = useState(() => parseInt(localStorage.getItem('mana') || '0'));
+  const [manaChargeCount, setManaChargeCount] = useState(() => parseInt(localStorage.getItem('manaChargeCount') || '0'));
 
   // Load from Supabase on startup
   useEffect(() => {
@@ -124,7 +127,9 @@ function App() {
     localStorage.setItem('eggPieces', eggPieces);
     localStorage.setItem('ownedMonsters', JSON.stringify(ownedMonsters));
     localStorage.setItem('activeMonsterId', activeMonsterId);
-  }, [practiceCount, eggPieces, ownedMonsters, activeMonsterId]);
+    localStorage.setItem('mana', mana);
+    localStorage.setItem('manaChargeCount', manaChargeCount);
+  }, [practiceCount, eggPieces, ownedMonsters, activeMonsterId, mana, manaChargeCount]);
 
   // Test Gift Logic for specific student
   useEffect(() => {
@@ -197,6 +202,20 @@ function App() {
   const handleComplete = () => {
     gainExp(1); // 한자 쓰면 +1 EXP
 
+    // Mana charging logic
+    const newManaChargeCount = manaChargeCount + 1;
+    if (newManaChargeCount >= 10) {
+      setManaChargeCount(0);
+      if (mana < 5) {
+        setMana(prev => prev + 1);
+        customAlert('🔮 마력이 1 충전되었습니다! 배틀에 참여할 수 있습니다!');
+      } else {
+        customAlert('🔮 마력이 이미 가득 찼습니다!');
+      }
+    } else {
+      setManaChargeCount(newManaChargeCount);
+    }
+
     const newCount = practiceCount + 1;
     if (newCount >= 20) {
       setPracticeCount(0);
@@ -243,7 +262,7 @@ function App() {
   };
 
   if (!playerId) {
-    return <ProfileSetup onComplete={(id) => {
+    return <ProfileSetup showAlert={customAlert} onComplete={(id) => {
       setPlayerId(id);
       const profile = JSON.parse(localStorage.getItem('playerProfile'));
       setCurrentProfile(profile);
@@ -254,7 +273,10 @@ function App() {
     <div className="app-container">
       {/* Top Profile Bar */}
       {currentMode !== 'leaderboard' && currentProfile && (
-        <div style={{ position: 'absolute', top: '10px', right: '20px', display: 'flex', gap: '1rem', alignItems: 'center', background: 'rgba(255,255,255,0.8)', padding: '0.5rem 1rem', borderRadius: '12px', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
+        <div style={{ position: 'absolute', top: '10px', right: '20px', display: 'flex', gap: '1rem', alignItems: 'center', background: 'rgba(255,255,255,0.8)', padding: '0.5rem 1rem', borderRadius: '12px', boxShadow: '0 2px 5px rgba(0,0,0,0.1)', zIndex: 100 }}>
+          <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary)', marginRight: '1rem' }}>
+            🔮 {mana}/5
+          </div>
           <div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
               {currentProfile.school_name} {currentProfile.grade}학년 {currentProfile.class_name} {currentProfile.student_number}번
@@ -305,11 +327,12 @@ function App() {
             <h1 className="practice-title">한자 쓰기 연습</h1>
             <div className="card practice-info-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 'auto' }}>
               <div className="info-card-full" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <span style={{ fontWeight: 'bold', color: 'var(--primary)' }}>마력 충전: {manaChargeCount}/10</span>
                 <span style={{ fontWeight: 'bold' }}>알 조각: {eggPieces}개</span>
                 <span style={{ fontSize: '0.9rem' }}>진척도: {practiceCount}/20</span>
               </div>
               <div className="info-card-short">
-                🥚 {eggPieces}개 | 📈 {practiceCount}/20
+                🔮 {manaChargeCount}/10 | 🥚 {eggPieces}개 | 📈 {practiceCount}/20
               </div>
             </div>
           </header>
@@ -418,6 +441,9 @@ function App() {
           onBattleWin={handleBattleWin}
           maxUnlockedLevel8={maxUnlockedLevel8}
           maxUnlockedLevel7={maxUnlockedLevel7}
+          mana={mana}
+          setMana={setMana}
+          showAlert={customAlert}
         />
       )}
       
@@ -430,6 +456,7 @@ function App() {
           setOwnedMonsters={setOwnedMonsters}
           activeMonsterId={activeMonsterId}
           setActiveMonsterId={setActiveMonsterId}
+          showAlert={customAlert}
         />
       )}
 
@@ -457,24 +484,12 @@ function App() {
             padding: '2.5rem', 
             textAlign: 'center', 
             maxWidth: '400px', 
-            animation: 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
+            animation: 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
           }}>
             <h3 style={{ marginBottom: '1.5rem', whiteSpace: 'pre-line', lineHeight: '1.5', fontSize: '1.3rem', color: 'var(--text-main)' }}>
               {alertMessage}
             </h3>
-            <button 
-              onClick={() => setAlertMessage(null)} 
-              style={{ 
-                padding: '0.8rem 2.5rem', 
-                background: 'var(--primary)', 
-                color: 'white', 
-                fontSize: '1.2rem', 
-                borderRadius: '12px',
-                fontWeight: 'bold',
-                boxShadow: '0 4px 10px rgba(255, 107, 107, 0.3)'
-              }}
-            >
+            <button onClick={() => setAlertMessage(null)}>
               확인
             </button>
           </div>

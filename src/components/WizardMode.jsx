@@ -22,7 +22,7 @@ const shuffle = (arr) => {
   return a;
 };
 
-export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUnlockedLevel8, maxUnlockedLevel7 = 0 }) {
+export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUnlockedLevel8, maxUnlockedLevel7 = 0, mana, setMana, showAlert }) {
   const PLAYER_MONSTER = getMonsterById(activeMonsterId || 'water_dragon');
   const [selectedEnemy, setSelectedEnemy] = useState(null);
   const [selectedGradeTab, setSelectedGradeTab] = useState(8);
@@ -82,6 +82,11 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
   };
 
   const handleSelectEnemy = (enemy, grade) => {
+    if (mana < 1) {
+      showAlert("마력이 부족합니다! 기본 연습장에서 한자를 연습해 마력을 충전하세요.");
+      return;
+    }
+    setMana(prev => prev - 1);
     setSelectedEnemy({ ...enemy, grade });
     setMonsterHp(enemy.maxHp);
     setPlayerHp(5);
@@ -223,7 +228,7 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
           <button 
             onClick={() => {
               if (maxUnlockedLevel8 < 5) {
-                alert('8급의 모든 난이도(1~5)를 다 깨야 7급 몬스터에 도전할 수 있습니다!');
+                showAlert('8급의 모든 난이도(1~5)를 다 깨야 7급 몬스터에 도전할 수 있습니다!');
               } else {
                 setSelectedGradeTab(7);
               }
@@ -271,7 +276,11 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
                 <div style={{ marginTop: '1rem', color: 'var(--error)', fontWeight: 'bold', fontSize: '1.2rem' }}>
                   HP: {enemy.maxHp}
                 </div>
-                {!isUnlocked && (
+                {isUnlocked ? (
+                  <div style={{ marginTop: '0.5rem', color: 'var(--primary)', fontSize: '1rem', fontWeight: 'bold' }}>
+                    소모: 🔮 1
+                  </div>
+                ) : (
                   <div style={{ marginTop: '0.5rem', color: '#666', fontSize: '0.9rem', fontWeight: 'bold' }}>
                     ({selectedGradeTab}급 난이도 {enemy.requiredLevel} 클리어 필요)
                   </div>

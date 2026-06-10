@@ -8,7 +8,8 @@ export default function VillageMode({
   ownedMonsters, 
   setOwnedMonsters,
   activeMonsterId,
-  setActiveMonsterId
+  setActiveMonsterId,
+  showAlert
 }) {
   const [hatching, setHatching] = useState(false);
   const [hatchResult, setHatchResult] = useState(null);
@@ -19,7 +20,7 @@ export default function VillageMode({
     const unowned = PLAYER_MONSTERS.filter(m => !ownedMonsters.includes(m.id));
     
     if (unowned.length === 0) {
-      alert("이미 모든 몬스터를 모았습니다!");
+      showAlert("이미 모든 몬스터를 모았습니다!");
       return;
     }
 

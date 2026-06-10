@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { supabase } from '../supabaseClient';
 import '../index.css';
 
-function ProfileSetup({ onComplete }) {
+function ProfileSetup({ onComplete, showAlert }) {
   const [school, setSchool] = useState('');
   const [grade, setGrade] = useState('');
   const [className, setClassName] = useState('');
@@ -12,7 +12,7 @@ function ProfileSetup({ onComplete }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!school || !grade || !className || !studentNumber) {
-      alert('모든 정보를 입력해주세요!');
+      showAlert('모든 정보를 입력해주세요!');
       return;
     }
 
@@ -50,7 +50,7 @@ function ProfileSetup({ onComplete }) {
       }
     } catch (error) {
       console.error('Error creating profile:', error);
-      alert('프로필 생성 중 오류: ' + (error.message || JSON.stringify(error)));
+      showAlert('프로필 생성 중 오류: ' + (error.message || JSON.stringify(error)));
     } finally {
       setLoading(false);
     }
@@ -72,7 +72,7 @@ function ProfileSetup({ onComplete }) {
                 placeholder="예: 서울" 
                 value={school}
                 onChange={(e) => setSchool(e.target.value)}
-                style={{ width: '150px', padding: '0.8rem', borderRadius: '8px', border: '2px solid var(--primary-light)', textAlign: 'center', fontSize: '1.1rem' }}
+                style={{ width: '150px', padding: '0.8rem', borderRadius: '8px', border: '2px solid #111', textAlign: 'center', fontSize: '1.1rem' }}
               />
               <span style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>초등학교</span>
             </div>
@@ -85,7 +85,7 @@ function ProfileSetup({ onComplete }) {
                 placeholder="3" 
                 value={grade}
                 onChange={(e) => setGrade(e.target.value)}
-                style={{ width: '60px', padding: '0.8rem', borderRadius: '8px', border: '2px solid var(--primary-light)', textAlign: 'center', fontSize: '1.1rem' }}
+                style={{ width: '60px', padding: '0.8rem', borderRadius: '8px', border: '2px solid #111', textAlign: 'center', fontSize: '1.1rem' }}
               />
               <span style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>학년</span>
             </div>
@@ -96,7 +96,7 @@ function ProfileSetup({ onComplete }) {
                 placeholder="1" 
                 value={className}
                 onChange={(e) => setClassName(e.target.value)}
-                style={{ width: '60px', padding: '0.8rem', borderRadius: '8px', border: '2px solid var(--primary-light)', textAlign: 'center', fontSize: '1.1rem' }}
+                style={{ width: '60px', padding: '0.8rem', borderRadius: '8px', border: '2px solid #111', textAlign: 'center', fontSize: '1.1rem' }}
               />
               <span style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>반</span>
             </div>
@@ -107,7 +107,7 @@ function ProfileSetup({ onComplete }) {
                 placeholder="15" 
                 value={studentNumber}
                 onChange={(e) => setStudentNumber(e.target.value)}
-                style={{ width: '60px', padding: '0.8rem', borderRadius: '8px', border: '2px solid var(--primary-light)', textAlign: 'center', fontSize: '1.1rem' }}
+                style={{ width: '60px', padding: '0.8rem', borderRadius: '8px', border: '2px solid #111', textAlign: 'center', fontSize: '1.1rem' }}
               />
               <span style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>번</span>
             </div>
@@ -118,15 +118,7 @@ function ProfileSetup({ onComplete }) {
             disabled={loading}
             style={{ 
               marginTop: '1.5rem', 
-              padding: '1rem', 
-              fontSize: '1.2rem', 
-              background: loading ? 'gray' : 'var(--primary)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              fontWeight: 'bold',
-              boxShadow: loading ? 'none' : '0 4px 0 var(--secondary)'
+              width: '100%'
             }}
           >
             {loading ? '등록 중...' : '입학하기'}
