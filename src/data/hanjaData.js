@@ -91,7 +91,7 @@ export const LEVEL_7_HANJA = [
   { char: '外', meaning: '바깥 외', spell: '외부 차단', effectType: 'magic' },
   { char: '主', meaning: '주인 주', spell: '주인의 명령', effectType: 'magic' },
   { char: '出', meaning: '날 출', spell: '돌진 베기', effectType: 'slash' },
-  { char: '平', meaning: '평평할 평', spell: '대지 평정', effectType: 'earth' },
+  { char: '公', meaning: '공평할 공', spell: '대지 평정', effectType: 'earth' },
   { char: '正', meaning: '바를 정', spell: '정의의 일격', effectType: 'slash' },
   { char: '同', meaning: '한가지 동', spell: '도플갱어 분신', effectType: 'magic' },
   { char: '老', meaning: '늙을 로', spell: '현자의 시간', effectType: 'magic' },
@@ -124,8 +124,8 @@ export const LEVEL_7_HANJA = [
   // --- 7급 난이도 6 (8~9획) ---
   { char: '育', meaning: '기를 육', spell: '성장 촉진', effectType: 'heart' },
   { char: '長', meaning: '긴 장', spell: '장창 찌르기', effectType: 'slash' },
-  { char: '直', meaning: '곧을 직', spell: '직선 레이저', effectType: 'explosion' },
-  { char: '靑', meaning: '푸를 청', spell: '푸른 뇌전', effectType: 'explosion' },
+  { char: '客', meaning: '손 객', spell: '직선 레이저', effectType: 'explosion' },
+  { char: '京', meaning: '서울 경', spell: '푸른 뇌전', effectType: 'explosion' },
   { char: '花', meaning: '꽃 화', spell: '꽃잎 소용돌이', effectType: 'magic' },
   { char: '物', meaning: '만물 물', spell: '염동력 투척', effectType: 'magic' },
   { char: '姓', meaning: '성 성', spell: '가문의 문장', effectType: 'magic' },
@@ -152,7 +152,7 @@ export const LEVEL_7_HANJA = [
   { char: '草', meaning: '풀 초', spell: '맹독의 풀잎', effectType: 'water' },
   { char: '海', meaning: '바다 해', spell: '해일 덮치기', effectType: 'water' },
   { char: '紙', meaning: '종이 지', spell: '부적 폭발', effectType: 'explosion' },
-  { char: '教', meaning: '가르칠 교', spell: '교훈의 채찍', effectType: 'slash' },
+  { char: '決', meaning: '결단할 결', spell: '교훈의 채찍', effectType: 'slash' },
   { char: '國', meaning: '나라 국', spell: '국가의 권위', effectType: 'magic' },
   { char: '動', meaning: '움직일 동', spell: '지진파', effectType: 'earth' },
   { char: '問', meaning: '물을 문', spell: '진실의 방', effectType: 'magic' },
@@ -163,7 +163,7 @@ export const LEVEL_7_HANJA = [
   { char: '登', meaning: '오를 등', spell: '천상 계단', effectType: 'magic' },
   { char: '然', meaning: '그럴 연', spell: '자연의 섭리', effectType: 'magic' },
   { char: '場', meaning: '마당 장', spell: '투기장 생성', effectType: 'earth' },
-  { char: '植', meaning: '심을 식', spell: '생명의 씨앗', effectType: 'heart' },
+  { char: '建', meaning: '세울 건', spell: '생명의 씨앗', effectType: 'heart' },
   { char: '道', meaning: '길 도', spell: '도의 경지', effectType: 'magic' },
   { char: '電', meaning: '번개 전', spell: '체인 라이트닝', effectType: 'explosion' },
   { char: '話', meaning: '말씀 화', spell: '최면의 화술', effectType: 'magic' },
@@ -184,14 +184,14 @@ export const LEVEL_7_HANJA = [
 
 export const LEVEL_6_HANJA = [
   // --- 6급 난이도 1 ---
-  { char: '植', meaning: '심을 식', spell: '6급 마법 植', effectType: 'water' },
+  { char: '建', meaning: '세울 건', spell: '6급 마법 建', effectType: 'water' },
   { char: '夏', meaning: '여름 하', spell: '6급 마법 夏', effectType: 'heart' },
   { char: '體', meaning: '몸 체', spell: '6급 마법 體', effectType: 'heart' },
   { char: '漢', meaning: '한수 한', spell: '6급 마법 漢', effectType: 'water' },
   { char: '海', meaning: '바다 해', spell: '6급 마법 海', effectType: 'punch' },
   { char: '孝', meaning: '효도 효', spell: '6급 마법 孝', effectType: 'explosion' },
   { char: '答', meaning: '대답 답', spell: '6급 마법 答', effectType: 'water' },
-  { char: '角', meaning: '뿔 각', spell: '6급 마법 角', effectType: 'magic' },
+  { char: '告', meaning: '알릴 고', spell: '6급 마법 告', effectType: 'magic' },
   { char: '感', meaning: '느낄 감', spell: '6급 마법 感', effectType: 'slash' },
   { char: '球', meaning: '공 구', spell: '6급 마법 球', effectType: 'explosion' },
   // --- 6급 난이도 2 ---
@@ -280,7 +280,7 @@ export const LEVEL_6_HANJA = [
   { char: '作', meaning: '지을 작', spell: '6급 마법 作', effectType: 'water' },
   { char: '黃', meaning: '누를 황', spell: '6급 마법 黃', effectType: 'arrow' },
   { char: '幸', meaning: '다행 행', spell: '6급 마법 幸', effectType: 'magic' },
-  { char: '者', meaning: '놈 자', spell: '6급 마법 者', effectType: 'heart' },
+  { char: '界', meaning: '지경 계', spell: '6급 마법 界', effectType: 'heart' },
   { char: '勇', meaning: '날랠 용', spell: '6급 마법 勇', effectType: 'earth' },
   // --- 6급 난이도 10 ---
   { char: '待', meaning: '기다릴 대', spell: '6급 마법 待', effectType: 'water' },
