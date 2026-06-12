@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import HanjaPad from './HanjaPad';
-import { LEVEL_8_HANJA, LEVEL_7_HANJA } from '../data/hanjaData';
-import { getMonsterById, ENEMY_MONSTERS, LEVEL7_ENEMY_MONSTERS } from '../data/monsterData';
+import { LEVEL_8_HANJA, LEVEL_7_HANJA, LEVEL_6_HANJA } from '../data/hanjaData';
+import { getMonsterById, ENEMY_MONSTERS, LEVEL7_ENEMY_MONSTERS, LEVEL6_ENEMY_MONSTERS } from '../data/monsterData';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const getSpellPool = (requiredLevel, grade = 8) => {
-  const sourceList = grade === 7 ? LEVEL_7_HANJA : LEVEL_8_HANJA;
+  const sourceList = grade === 6 ? LEVEL_6_HANJA : grade === 7 ? LEVEL_7_HANJA : LEVEL_8_HANJA;
   if (!requiredLevel) return [...sourceList];
   const itemsPerLevel = 10;
   const minIdx = (requiredLevel - 1) * itemsPerLevel;
@@ -22,7 +22,7 @@ const shuffle = (arr) => {
   return a;
 };
 
-export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUnlockedLevel8, maxUnlockedLevel7 = 0, mana, setMana, showAlert }) {
+export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUnlockedLevel8, maxUnlockedLevel7 = 0, maxUnlockedLevel6 = 0, mana, setMana, showAlert }) {
   const PLAYER_MONSTER = getMonsterById(activeMonsterId || 'water_dragon');
   const [selectedEnemy, setSelectedEnemy] = useState(null);
   const [selectedGradeTab, setSelectedGradeTab] = useState(8);
@@ -74,11 +74,23 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
 
   const getBattleRewards = () => {
     const reqLevel = selectedEnemy?.requiredLevel || 1;
+    const grade = selectedEnemy?.grade || '8급';
+    
     let eggReward = 1;
-    if (reqLevel >= 4 && reqLevel <= 6) eggReward = 2;
-    else if (reqLevel >= 7 && reqLevel <= 9) eggReward = 3;
-    else if (reqLevel >= 10) eggReward = 5;
-    return { eggReward, expReward: reqLevel * 10 };
+    let expReward = 10;
+    
+    if (grade === '8급') {
+      eggReward = 1 + Math.floor((reqLevel - 1) / 2); 
+      expReward = 20 + (reqLevel * 10); 
+    } else if (grade === '7급') {
+      eggReward = 3 + Math.floor((reqLevel - 1) / 3); 
+      expReward = 50 + (reqLevel * 15);
+    } else if (grade === '6급') {
+      eggReward = 5 + Math.floor((reqLevel - 1) / 3);
+      expReward = 100 + (reqLevel * 20);
+    }
+
+    return { eggReward, expReward };
   };
 
   const handleSelectEnemy = (enemy, grade) => {
@@ -247,11 +259,33 @@ export default function WizardMode({ onBack, activeMonsterId, onBattleWin, maxUn
           >
             {maxUnlockedLevel8 >= 5 ? '7급 몬스터 (정예)' : '🔒 7급 몬스터'}
           </button>
+          <button 
+            onClick={() => {
+              if (maxUnlockedLevel7 < 10) {
+                showAlert('7급의 모든 난이도(1~10)를 다 깨야 6급 몬스터에 도전할 수 있습니다!');
+              } else {
+                setSelectedGradeTab(6);
+              }
+            }}
+            style={{
+              padding: '0.8rem 2rem',
+              borderRadius: '20px',
+              fontWeight: 'bold',
+              background: selectedGradeTab === 6 ? '#ff9800' : '#e0e0e0',
+              color: selectedGradeTab === 6 ? 'white' : '#999',
+              boxShadow: selectedGradeTab === 6 ? '0 4px 10px rgba(0,0,0,0.2)' : 'none',
+              border: 'none',
+              cursor: maxUnlockedLevel7 >= 10 ? 'pointer' : 'not-allowed',
+              opacity: maxUnlockedLevel7 >= 10 ? 1 : 0.6
+            }}
+          >
+            {maxUnlockedLevel7 >= 10 ? '6급 몬스터 (중급)' : '🔒 6급 몬스터'}
+          </button>
         </div>
         
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center' }}>
-          {(selectedGradeTab === 8 ? ENEMY_MONSTERS : LEVEL7_ENEMY_MONSTERS).map((enemy) => {
-            const isUnlocked = selectedGradeTab === 8 ? (maxUnlockedLevel8 >= enemy.requiredLevel) : (maxUnlockedLevel7 >= enemy.requiredLevel);
+          {(selectedGradeTab === 6 ? LEVEL6_ENEMY_MONSTERS : selectedGradeTab === 7 ? LEVEL7_ENEMY_MONSTERS : ENEMY_MONSTERS).map((enemy) => {
+            const isUnlocked = selectedGradeTab === 6 ? (maxUnlockedLevel6 >= enemy.requiredLevel) : selectedGradeTab === 7 ? (maxUnlockedLevel7 >= enemy.requiredLevel) : (maxUnlockedLevel8 >= enemy.requiredLevel);
             return (
               <div 
                 key={enemy.id}

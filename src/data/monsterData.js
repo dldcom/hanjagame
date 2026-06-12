@@ -148,22 +148,40 @@ export const getMonsterById = (id) => {
 };
 
 export const ENEMY_MONSTERS = [
-  { id: 'enemy_1', name: '불 도깨비', imageUrl: '/fire_monster.webp', maxHp: 2, requiredLevel: 1 },
-  { id: 'enemy_2', name: '물 슬라임', imageUrl: '/water_monster.webp', maxHp: 4, requiredLevel: 2 },
-  { id: 'enemy_3', name: '바람 박쥐', imageUrl: '/wind_monster.webp', maxHp: 6, requiredLevel: 3 },
-  { id: 'enemy_4', name: '돌 골렘', imageUrl: '/earth_monster.webp', maxHp: 8, requiredLevel: 4 },
-  { id: 'enemy_5', name: '어둠의 기사', imageUrl: '/dark_monster.webp', maxHp: 10, requiredLevel: 5 }
+  { id: 'enemy_1', name: '불 도깨비', imageUrl: '/fire_monster.webp', maxHp: 5, requiredLevel: 1 },
+  { id: 'enemy_2', name: '물 슬라임', imageUrl: '/water_monster.webp', maxHp: 5, requiredLevel: 2 },
+  { id: 'enemy_3', name: '바람 박쥐', imageUrl: '/wind_monster.webp', maxHp: 5, requiredLevel: 3 },
+  { id: 'enemy_4', name: '돌 골렘', imageUrl: '/earth_monster.webp', maxHp: 5, requiredLevel: 4 },
+  { id: 'enemy_5', name: '어둠의 기사', imageUrl: '/dark_monster.webp', maxHp: 5, requiredLevel: 5 }
 ];
 
 export const LEVEL7_ENEMY_MONSTERS = [
-  { id: 'enemy7_1', name: '풀잎 애벌레', imageUrl: '/enemy7_1.webp', maxHp: 2, requiredLevel: 1 },
-  { id: 'enemy7_2', name: '독버섯 요정', imageUrl: '/enemy7_2.webp', maxHp: 4, requiredLevel: 2 },
-  { id: 'enemy7_3', name: '얼음 펭귄', imageUrl: '/enemy7_3.webp', maxHp: 6, requiredLevel: 3 },
-  { id: 'enemy7_4', name: '모래 여우', imageUrl: '/enemy7_4.webp', maxHp: 8, requiredLevel: 4 },
-  { id: 'enemy7_5', name: '번개 찌르레기', imageUrl: '/enemy7_5.webp', maxHp: 10, requiredLevel: 5 },
-  { id: 'enemy7_6', name: '유령 호박', imageUrl: '/enemy7_6.webp', maxHp: 12, requiredLevel: 6 },
-  { id: 'enemy7_7', name: '강철 꼬마로봇', imageUrl: '/enemy7_7.webp', maxHp: 14, requiredLevel: 7 },
-  { id: 'enemy7_8', name: '마그마 하운드', imageUrl: '/enemy7_8.webp', maxHp: 16, requiredLevel: 8 },
-  { id: 'enemy7_9', name: '수정 방패병', imageUrl: '/enemy7_9.webp', maxHp: 18, requiredLevel: 9 },
-  { id: 'enemy7_10', name: '타락한 꼬마 드래곤', imageUrl: '/enemy7_10.webp', maxHp: 20, requiredLevel: 10 }
+  { id: 'enemy7_1', name: '풀잎 애벌레', imageUrl: '/enemy7_1.webp', maxHp: 5, requiredLevel: 1 },
+  { id: 'enemy7_2', name: '독버섯 요정', imageUrl: '/enemy7_2.webp', maxHp: 5, requiredLevel: 2 },
+  { id: 'enemy7_3', name: '얼음 펭귄', imageUrl: '/enemy7_3.webp', maxHp: 5, requiredLevel: 3 },
+  { id: 'enemy7_4', name: '모래 여우', imageUrl: '/enemy7_4.webp', maxHp: 5, requiredLevel: 4 },
+  { id: 'enemy7_5', name: '번개 찌르레기', imageUrl: '/enemy7_5.webp', maxHp: 5, requiredLevel: 5 },
+  { id: 'enemy7_6', name: '유령 호박', imageUrl: '/enemy7_6.webp', maxHp: 5, requiredLevel: 6 },
+  { id: 'enemy7_7', name: '강철 꼬마로봇', imageUrl: '/enemy7_7.webp', maxHp: 5, requiredLevel: 7 },
+  { id: 'enemy7_8', name: '마그마 하운드', imageUrl: '/enemy7_8.webp', maxHp: 5, requiredLevel: 8 },
+  { id: 'enemy7_9', name: '수정 방패병', imageUrl: '/enemy7_9.webp', maxHp: 5, requiredLevel: 9 },
+  { id: 'enemy7_10', name: '타락한 꼬마 드래곤', imageUrl: '/enemy7_10.webp', maxHp: 5, requiredLevel: 10 }
+];
+
+export const LEVEL6_ENEMY_MONSTERS = [
+  { id: 'enemy6_1', name: '그림자 정령', imageUrl: '/enemy6_1.webp', maxHp: 5, requiredLevel: 1 },
+  { id: 'enemy6_2', name: '모래 전갈', imageUrl: '/enemy6_2.webp', maxHp: 5, requiredLevel: 2 },
+  { id: 'enemy6_3', name: '맹독 늪지뱀', imageUrl: '/enemy6_3.webp', maxHp: 5, requiredLevel: 3 },
+  { id: 'enemy6_4', name: '고대 목각인형', imageUrl: '/enemy6_4.webp', maxHp: 5, requiredLevel: 4 },
+  { id: 'enemy6_5', name: '바람의 검객', imageUrl: '/enemy6_5.webp', maxHp: 5, requiredLevel: 5 },
+  { id: 'enemy6_6', name: '화염 사제', imageUrl: '/enemy6_6.webp', maxHp: 5, requiredLevel: 6 },
+  { id: 'enemy6_7', name: '강철 기계수', imageUrl: '/enemy6_7.webp', maxHp: 5, requiredLevel: 7 },
+  { id: 'enemy6_8', name: '서리 마녀', imageUrl: '/enemy6_8.webp', maxHp: 5, requiredLevel: 8 },
+  { id: 'enemy6_9', name: '대지의 코뿔소', imageUrl: '/enemy6_9.webp', maxHp: 5, requiredLevel: 9 },
+  { id: 'enemy6_10', name: '수정 골렘', imageUrl: '/enemy6_10.webp', maxHp: 5, requiredLevel: 10 },
+  { id: 'enemy6_11', name: '암흑 기사', imageUrl: '/enemy6_11.webp', maxHp: 5, requiredLevel: 11 },
+  { id: 'enemy6_12', name: '심해 괴수', imageUrl: '/enemy6_12.webp', maxHp: 5, requiredLevel: 12 },
+  { id: 'enemy6_13', name: '번개 드래곤', imageUrl: '/enemy6_13.webp', maxHp: 5, requiredLevel: 13 },
+  { id: 'enemy6_14', name: '환영 마술사', imageUrl: '/enemy6_14.webp', maxHp: 5, requiredLevel: 14 },
+  { id: 'enemy6_15', name: '지옥의 문지기', imageUrl: '/enemy6_15.webp', maxHp: 5, requiredLevel: 15 }
 ];

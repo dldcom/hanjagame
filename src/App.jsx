@@ -4,7 +4,7 @@ import WizardMode from './components/WizardMode';
 import VillageMode from './components/VillageMode';
 import ProfileSetup from './components/ProfileSetup';
 import Leaderboard from './components/Leaderboard';
-import { LEVEL_8_HANJA, LEVEL_7_HANJA } from './data/hanjaData';
+import { LEVEL_8_HANJA, LEVEL_7_HANJA, LEVEL_6_HANJA } from './data/hanjaData';
 import { supabase } from './supabaseClient';
 import './index.css';
 
@@ -42,6 +42,10 @@ function App() {
   // Progression States for 7급
   const [maxUnlockedLevel7, setMaxUnlockedLevel7] = useState(() => parseInt(localStorage.getItem('maxUnlockedLevel7') || '0'));
   const [completedHanja7, setCompletedHanja7] = useState(() => JSON.parse(localStorage.getItem('completedHanja7') || '[]'));
+
+  // Progression States for 6급
+  const [maxUnlockedLevel6, setMaxUnlockedLevel6] = useState(() => parseInt(localStorage.getItem('maxUnlockedLevel6') || '0'));
+  const [completedHanja6, setCompletedHanja6] = useState(() => JSON.parse(localStorage.getItem('completedHanja6') || '[]'));
 
   const [sessionCompleted, setSessionCompleted] = useState([]);
 
@@ -138,13 +142,15 @@ function App() {
         currentProfile.grade === 3 && 
         currentProfile.class_name === '1반' && 
         currentProfile.student_number === 15) {
-      if (!localStorage.getItem('testUnlockGiven')) {
+      if (!localStorage.getItem('testUnlockGiven_v2')) {
         setMaxUnlockedLevel8(5);
         localStorage.setItem('maxUnlockedLevel8', '5');
         setMaxUnlockedLevel7(10);
         localStorage.setItem('maxUnlockedLevel7', '10');
-        localStorage.setItem('testUnlockGiven', 'true');
-        setTimeout(() => customAlert('🔓 [테스트] 8급/7급 모든 난이도와 몬스터 잠금이 해제되었습니다!'), 2000);
+        setMaxUnlockedLevel6(15);
+        localStorage.setItem('maxUnlockedLevel6', '15');
+        localStorage.setItem('testUnlockGiven_v2', 'true');
+        setTimeout(() => customAlert('🔓 [테스트] 8급/7급/6급 모든 난이도와 몬스터 잠금이 해제되었습니다!'), 2000);
       }
     }
   }, [currentProfile]);
@@ -160,19 +166,19 @@ function App() {
     setCurrentMode(newMode);
   };
 
-  const activeHanjaList = selectedGrade === 7 ? LEVEL_7_HANJA : LEVEL_8_HANJA;
+  const activeHanjaList = selectedGrade === 6 ? LEVEL_6_HANJA : selectedGrade === 7 ? LEVEL_7_HANJA : LEVEL_8_HANJA;
   const currentHanja = activeHanjaList[currentHanjaIndex];
 
   const itemsPerLevel = 10;
   const totalLevels = Math.ceil(activeHanjaList.length / itemsPerLevel);
 
-  const activeMaxUnlocked = selectedGrade === 7 ? maxUnlockedLevel7 : maxUnlockedLevel8;
-  const setActiveMaxUnlocked = selectedGrade === 7 ? setMaxUnlockedLevel7 : setMaxUnlockedLevel8;
-  const activeMaxUnlockedKey = selectedGrade === 7 ? 'maxUnlockedLevel7' : 'maxUnlockedLevel8';
+  const activeMaxUnlocked = selectedGrade === 6 ? maxUnlockedLevel6 : selectedGrade === 7 ? maxUnlockedLevel7 : maxUnlockedLevel8;
+  const setActiveMaxUnlocked = selectedGrade === 6 ? setMaxUnlockedLevel6 : selectedGrade === 7 ? setMaxUnlockedLevel7 : setMaxUnlockedLevel8;
+  const activeMaxUnlockedKey = selectedGrade === 6 ? 'maxUnlockedLevel6' : selectedGrade === 7 ? 'maxUnlockedLevel7' : 'maxUnlockedLevel8';
 
-  const activeCompleted = selectedGrade === 7 ? completedHanja7 : completedHanja8;
-  const setActiveCompleted = selectedGrade === 7 ? setCompletedHanja7 : setCompletedHanja8;
-  const activeCompletedKey = selectedGrade === 7 ? 'completedHanja7' : 'completedHanja8';
+  const activeCompleted = selectedGrade === 6 ? completedHanja6 : selectedGrade === 7 ? completedHanja7 : completedHanja8;
+  const setActiveCompleted = selectedGrade === 6 ? setCompletedHanja6 : selectedGrade === 7 ? setCompletedHanja7 : setCompletedHanja8;
+  const activeCompletedKey = selectedGrade === 6 ? 'completedHanja6' : selectedGrade === 7 ? 'completedHanja7' : 'completedHanja8';
 
   const nextHanja = () => {
     if (selectedDifficulty === null) return;
@@ -365,6 +371,23 @@ function App() {
                 >
                   {maxUnlockedLevel8 >= 5 ? '견습 마법사 (7급 100자)' : '🔒 견습 마법사 (8급 클리어 시 해금)'}
                 </button>
+                <button 
+                  onClick={() => {
+                     if (maxUnlockedLevel7 < 10) {
+                        customAlert('7급의 모든 난이도(1~10)를 다 깨야 6급에 진입할 수 있습니다!');
+                     } else {
+                        setSelectedGrade(6);
+                     }
+                  }}
+                  className="grade-select-btn"
+                  style={{ 
+                    background: maxUnlockedLevel7 >= 10 ? '#ff9800' : '#e0e0e0',
+                    color: maxUnlockedLevel7 >= 10 ? '#fff' : '#999',
+                    cursor: maxUnlockedLevel7 >= 10 ? 'pointer' : 'not-allowed'
+                  }}
+                >
+                  {maxUnlockedLevel7 >= 10 ? '중급 마법사 (6급 150자)' : '🔒 중급 마법사 (7급 클리어 시 해금)'}
+                </button>
               </div>
             </div>
           ) : selectedDifficulty === null ? (
@@ -441,6 +464,7 @@ function App() {
           onBattleWin={handleBattleWin}
           maxUnlockedLevel8={maxUnlockedLevel8}
           maxUnlockedLevel7={maxUnlockedLevel7}
+          maxUnlockedLevel6={maxUnlockedLevel6}
           mana={mana}
           setMana={setMana}
           showAlert={customAlert}
@@ -457,6 +481,7 @@ function App() {
           activeMonsterId={activeMonsterId}
           setActiveMonsterId={setActiveMonsterId}
           showAlert={customAlert}
+          gainExp={gainExp}
         />
       )}
 

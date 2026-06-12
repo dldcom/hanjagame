@@ -1,0 +1,902 @@
+[
+  {
+    "char": "植",
+    "meaning": "심을 식",
+    "spell": "6급 마법 植",
+    "effectType": "water"
+  },
+  {
+    "char": "夏",
+    "meaning": "여름 하",
+    "spell": "6급 마법 夏",
+    "effectType": "heart"
+  },
+  {
+    "char": "體",
+    "meaning": "몸 체",
+    "spell": "6급 마법 體",
+    "effectType": "heart"
+  },
+  {
+    "char": "漢",
+    "meaning": "한수 한",
+    "spell": "6급 마법 漢",
+    "effectType": "water"
+  },
+  {
+    "char": "海",
+    "meaning": "바다 해",
+    "spell": "6급 마법 海",
+    "effectType": "punch"
+  },
+  {
+    "char": "孝",
+    "meaning": "효도 효",
+    "spell": "6급 마법 孝",
+    "effectType": "explosion"
+  },
+  {
+    "char": "答",
+    "meaning": "대답 답",
+    "spell": "6급 마법 答",
+    "effectType": "water"
+  },
+  {
+    "char": "角",
+    "meaning": "뿔 각",
+    "spell": "6급 마법 角",
+    "effectType": "magic"
+  },
+  {
+    "char": "感",
+    "meaning": "느낄 감",
+    "spell": "6급 마법 感",
+    "effectType": "slash"
+  },
+  {
+    "char": "球",
+    "meaning": "공 구",
+    "spell": "6급 마법 球",
+    "effectType": "explosion"
+  },
+  {
+    "char": "路",
+    "meaning": "길 로",
+    "spell": "6급 마법 路",
+    "effectType": "arrow"
+  },
+  {
+    "char": "界",
+    "meaning": "지경 계",
+    "spell": "6급 마법 界",
+    "effectType": "punch"
+  },
+  {
+    "char": "强",
+    "meaning": "강할 강",
+    "spell": "6급 마법 强",
+    "effectType": "heart"
+  },
+  {
+    "char": "短",
+    "meaning": "짧을 단",
+    "spell": "6급 마법 短",
+    "effectType": "heart"
+  },
+  {
+    "char": "苦",
+    "meaning": "쓸 고",
+    "spell": "6급 마법 苦",
+    "effectType": "explosion"
+  },
+  {
+    "char": "發",
+    "meaning": "필 발",
+    "spell": "6급 마법 發",
+    "effectType": "punch"
+  },
+  {
+    "char": "今",
+    "meaning": "이제 금",
+    "spell": "6급 마법 今",
+    "effectType": "arrow"
+  },
+  {
+    "char": "番",
+    "meaning": "차례 번",
+    "spell": "6급 마법 番",
+    "effectType": "magic"
+  },
+  {
+    "char": "美",
+    "meaning": "아름다울 미",
+    "spell": "6급 마법 美",
+    "effectType": "slash"
+  },
+  {
+    "char": "功",
+    "meaning": "공로 공",
+    "spell": "6급 마법 功",
+    "effectType": "water"
+  },
+  {
+    "char": "堂",
+    "meaning": "집 당",
+    "spell": "6급 마법 堂",
+    "effectType": "water"
+  },
+  {
+    "char": "言",
+    "meaning": "말씀 언",
+    "spell": "6급 마법 言",
+    "effectType": "magic"
+  },
+  {
+    "char": "冬",
+    "meaning": "겨울 동",
+    "spell": "6급 마법 冬",
+    "effectType": "earth"
+  },
+  {
+    "char": "本",
+    "meaning": "근본 본",
+    "spell": "6급 마법 本",
+    "effectType": "water"
+  },
+  {
+    "char": "永",
+    "meaning": "길 영",
+    "spell": "6급 마법 永",
+    "effectType": "slash"
+  },
+  {
+    "char": "雪",
+    "meaning": "눈 설",
+    "spell": "6급 마법 雪",
+    "effectType": "heart"
+  },
+  {
+    "char": "病",
+    "meaning": "병 병",
+    "spell": "6급 마법 病",
+    "effectType": "slash"
+  },
+  {
+    "char": "分",
+    "meaning": "나눌 분",
+    "spell": "6급 마법 分",
+    "effectType": "punch"
+  },
+  {
+    "char": "孫",
+    "meaning": "손자 손",
+    "spell": "6급 마법 孫",
+    "effectType": "explosion"
+  },
+  {
+    "char": "神",
+    "meaning": "귀신 신",
+    "spell": "6급 마법 神",
+    "effectType": "earth"
+  },
+  {
+    "char": "速",
+    "meaning": "빠를 속",
+    "spell": "6급 마법 速",
+    "effectType": "magic"
+  },
+  {
+    "char": "術",
+    "meaning": "재주 술",
+    "spell": "6급 마법 術",
+    "effectType": "slash"
+  },
+  {
+    "char": "野",
+    "meaning": "들 야",
+    "spell": "6급 마법 野",
+    "effectType": "heart"
+  },
+  {
+    "char": "意",
+    "meaning": "뜻 의",
+    "spell": "6급 마법 意",
+    "effectType": "explosion"
+  },
+  {
+    "char": "全",
+    "meaning": "온전 전",
+    "spell": "6급 마법 全",
+    "effectType": "slash"
+  },
+  {
+    "char": "愛",
+    "meaning": "사랑 애",
+    "spell": "6급 마법 愛",
+    "effectType": "slash"
+  },
+  {
+    "char": "皮",
+    "meaning": "가죽 피",
+    "spell": "6급 마법 皮",
+    "effectType": "explosion"
+  },
+  {
+    "char": "交",
+    "meaning": "사귈 교",
+    "spell": "6급 마법 交",
+    "effectType": "magic"
+  },
+  {
+    "char": "省",
+    "meaning": "살필 성",
+    "spell": "6급 마법 省",
+    "effectType": "earth"
+  },
+  {
+    "char": "必",
+    "meaning": "반드시 필",
+    "spell": "6급 마법 必",
+    "effectType": "slash"
+  },
+  {
+    "char": "晝",
+    "meaning": "낮 주",
+    "spell": "6급 마법 晝",
+    "effectType": "arrow"
+  },
+  {
+    "char": "行",
+    "meaning": "다닐 행",
+    "spell": "6급 마법 行",
+    "effectType": "arrow"
+  },
+  {
+    "char": "呼",
+    "meaning": "부를 호",
+    "spell": "6급 마법 呼",
+    "effectType": "water"
+  },
+  {
+    "char": "才",
+    "meaning": "재주 재",
+    "spell": "6급 마법 才",
+    "effectType": "arrow"
+  },
+  {
+    "char": "頭",
+    "meaning": "머리 두",
+    "spell": "6급 마법 頭",
+    "effectType": "heart"
+  },
+  {
+    "char": "財",
+    "meaning": "재물 재",
+    "spell": "6급 마법 財",
+    "effectType": "magic"
+  },
+  {
+    "char": "談",
+    "meaning": "말씀 담",
+    "spell": "6급 마법 談",
+    "effectType": "heart"
+  },
+  {
+    "char": "銀",
+    "meaning": "은 은",
+    "spell": "6급 마법 銀",
+    "effectType": "water"
+  },
+  {
+    "char": "史",
+    "meaning": "역사 사",
+    "spell": "6급 마법 史",
+    "effectType": "slash"
+  },
+  {
+    "char": "局",
+    "meaning": "판 국",
+    "spell": "6급 마법 局",
+    "effectType": "heart"
+  },
+  {
+    "char": "風",
+    "meaning": "바람 풍",
+    "spell": "6급 마법 風",
+    "effectType": "magic"
+  },
+  {
+    "char": "朝",
+    "meaning": "아침 조",
+    "spell": "6급 마법 朝",
+    "effectType": "earth"
+  },
+  {
+    "char": "泣",
+    "meaning": "울 읍",
+    "spell": "6급 마법 泣",
+    "effectType": "earth"
+  },
+  {
+    "char": "共",
+    "meaning": "한가지 공",
+    "spell": "6급 마법 共",
+    "effectType": "heart"
+  },
+  {
+    "char": "信",
+    "meaning": "믿을 신",
+    "spell": "6급 마법 信",
+    "effectType": "magic"
+  },
+  {
+    "char": "放",
+    "meaning": "놓을 방",
+    "spell": "6급 마법 放",
+    "effectType": "arrow"
+  },
+  {
+    "char": "科",
+    "meaning": "과목 과",
+    "spell": "6급 마법 科",
+    "effectType": "punch"
+  },
+  {
+    "char": "反",
+    "meaning": "돌이킬 반",
+    "spell": "6급 마법 反",
+    "effectType": "earth"
+  },
+  {
+    "char": "高",
+    "meaning": "높을 고",
+    "spell": "6급 마법 高",
+    "effectType": "arrow"
+  },
+  {
+    "char": "光",
+    "meaning": "빛 광",
+    "spell": "6급 마법 光",
+    "effectType": "arrow"
+  },
+  {
+    "char": "班",
+    "meaning": "나눌 반",
+    "spell": "6급 마법 班",
+    "effectType": "water"
+  },
+  {
+    "char": "理",
+    "meaning": "다스릴 리",
+    "spell": "6급 마법 理",
+    "effectType": "explosion"
+  },
+  {
+    "char": "京",
+    "meaning": "서울 경",
+    "spell": "6급 마법 京",
+    "effectType": "earth"
+  },
+  {
+    "char": "根",
+    "meaning": "뿌리 근",
+    "spell": "6급 마법 根",
+    "effectType": "punch"
+  },
+  {
+    "char": "公",
+    "meaning": "공평할 공",
+    "spell": "6급 마법 公",
+    "effectType": "slash"
+  },
+  {
+    "char": "近",
+    "meaning": "가까울 근",
+    "spell": "6급 마법 近",
+    "effectType": "earth"
+  },
+  {
+    "char": "級",
+    "meaning": "등급 급",
+    "spell": "6급 마법 級",
+    "effectType": "explosion"
+  },
+  {
+    "char": "代",
+    "meaning": "대신할 대",
+    "spell": "6급 마법 代",
+    "effectType": "earth"
+  },
+  {
+    "char": "各",
+    "meaning": "각각 각",
+    "spell": "6급 마법 各",
+    "effectType": "explosion"
+  },
+  {
+    "char": "落",
+    "meaning": "떨어질 락",
+    "spell": "6급 마법 落",
+    "effectType": "earth"
+  },
+  {
+    "char": "區",
+    "meaning": "지경 구",
+    "spell": "6급 마법 區",
+    "effectType": "slash"
+  },
+  {
+    "char": "等",
+    "meaning": "무리 등",
+    "spell": "6급 마법 等",
+    "effectType": "water"
+  },
+  {
+    "char": "消",
+    "meaning": "꺼질 소",
+    "spell": "6급 마법 消",
+    "effectType": "arrow"
+  },
+  {
+    "char": "度",
+    "meaning": "법도 도",
+    "spell": "6급 마법 度",
+    "effectType": "magic"
+  },
+  {
+    "char": "郡",
+    "meaning": "고을 군",
+    "spell": "6급 마법 郡",
+    "effectType": "water"
+  },
+  {
+    "char": "部",
+    "meaning": "떼 부",
+    "spell": "6급 마법 部",
+    "effectType": "earth"
+  },
+  {
+    "char": "童",
+    "meaning": "아이 동",
+    "spell": "6급 마법 童",
+    "effectType": "slash"
+  },
+  {
+    "char": "多",
+    "meaning": "많을 다",
+    "spell": "6급 마법 多",
+    "effectType": "slash"
+  },
+  {
+    "char": "成",
+    "meaning": "이룰 성",
+    "spell": "6급 마법 成",
+    "effectType": "punch"
+  },
+  {
+    "char": "新",
+    "meaning": "새 신",
+    "spell": "6급 마법 新",
+    "effectType": "punch"
+  },
+  {
+    "char": "業",
+    "meaning": "업 업",
+    "spell": "6급 마법 業",
+    "effectType": "explosion"
+  },
+  {
+    "char": "醫",
+    "meaning": "의원 의",
+    "spell": "6급 마법 醫",
+    "effectType": "slash"
+  },
+  {
+    "char": "綠",
+    "meaning": "푸를 록",
+    "spell": "6급 마법 綠",
+    "effectType": "magic"
+  },
+  {
+    "char": "弱",
+    "meaning": "약할 약",
+    "spell": "6급 마법 弱",
+    "effectType": "earth"
+  },
+  {
+    "char": "半",
+    "meaning": "반 반",
+    "spell": "6급 마법 半",
+    "effectType": "heart"
+  },
+  {
+    "char": "作",
+    "meaning": "지을 작",
+    "spell": "6급 마법 作",
+    "effectType": "water"
+  },
+  {
+    "char": "黃",
+    "meaning": "누를 황",
+    "spell": "6급 마법 黃",
+    "effectType": "arrow"
+  },
+  {
+    "char": "幸",
+    "meaning": "다행 행",
+    "spell": "6급 마법 幸",
+    "effectType": "magic"
+  },
+  {
+    "char": "者",
+    "meaning": "놈 자",
+    "spell": "6급 마법 者",
+    "effectType": "heart"
+  },
+  {
+    "char": "勇",
+    "meaning": "날랠 용",
+    "spell": "6급 마법 勇",
+    "effectType": "earth"
+  },
+  {
+    "char": "待",
+    "meaning": "기다릴 대",
+    "spell": "6급 마법 待",
+    "effectType": "water"
+  },
+  {
+    "char": "能",
+    "meaning": "능할 능",
+    "spell": "6급 마법 能",
+    "effectType": "arrow"
+  },
+  {
+    "char": "表",
+    "meaning": "겉 표",
+    "spell": "6급 마법 表",
+    "effectType": "arrow"
+  },
+  {
+    "char": "急",
+    "meaning": "급할 급",
+    "spell": "6급 마법 急",
+    "effectType": "magic"
+  },
+  {
+    "char": "服",
+    "meaning": "옷 복",
+    "spell": "6급 마법 服",
+    "effectType": "heart"
+  },
+  {
+    "char": "和",
+    "meaning": "화할 화",
+    "spell": "6급 마법 和",
+    "effectType": "earth"
+  },
+  {
+    "char": "陽",
+    "meaning": "볕 양",
+    "spell": "6급 마법 陽",
+    "effectType": "punch"
+  },
+  {
+    "char": "勝",
+    "meaning": "이길 승",
+    "spell": "6급 마법 勝",
+    "effectType": "heart"
+  },
+  {
+    "char": "身",
+    "meaning": "몸 신",
+    "spell": "6급 마법 身",
+    "effectType": "arrow"
+  },
+  {
+    "char": "果",
+    "meaning": "열매 과",
+    "spell": "6급 마법 果",
+    "effectType": "earth"
+  },
+  {
+    "char": "別",
+    "meaning": "다를 별",
+    "spell": "6급 마법 別",
+    "effectType": "explosion"
+  },
+  {
+    "char": "溫",
+    "meaning": "따뜻할 온",
+    "spell": "6급 마법 溫",
+    "effectType": "water"
+  },
+  {
+    "char": "集",
+    "meaning": "모을 집",
+    "spell": "6급 마법 集",
+    "effectType": "magic"
+  },
+  {
+    "char": "向",
+    "meaning": "향할 향",
+    "spell": "6급 마법 向",
+    "effectType": "explosion"
+  },
+  {
+    "char": "讀",
+    "meaning": "읽을 독",
+    "spell": "6급 마법 讀",
+    "effectType": "explosion"
+  },
+  {
+    "char": "責",
+    "meaning": "꾸짖을 책",
+    "spell": "6급 마법 責",
+    "effectType": "slash"
+  },
+  {
+    "char": "音",
+    "meaning": "소리 음",
+    "spell": "6급 마법 音",
+    "effectType": "magic"
+  },
+  {
+    "char": "圖",
+    "meaning": "그림 도",
+    "spell": "6급 마법 圖",
+    "effectType": "arrow"
+  },
+  {
+    "char": "對",
+    "meaning": "대할 대",
+    "spell": "6급 마법 對",
+    "effectType": "punch"
+  },
+  {
+    "char": "古",
+    "meaning": "옛 고",
+    "spell": "6급 마법 古",
+    "effectType": "magic"
+  },
+  {
+    "char": "特",
+    "meaning": "특별할 특",
+    "spell": "6급 마법 特",
+    "effectType": "punch"
+  },
+  {
+    "char": "夜",
+    "meaning": "밤 야",
+    "spell": "6급 마법 夜",
+    "effectType": "water"
+  },
+  {
+    "char": "題",
+    "meaning": "제목 제",
+    "spell": "6급 마법 題",
+    "effectType": "water"
+  },
+  {
+    "char": "由",
+    "meaning": "말미암을 유",
+    "spell": "6급 마법 由",
+    "effectType": "heart"
+  },
+  {
+    "char": "戰",
+    "meaning": "싸울 전",
+    "spell": "6급 마법 戰",
+    "effectType": "explosion"
+  },
+  {
+    "char": "給",
+    "meaning": "줄 급",
+    "spell": "6급 마법 給",
+    "effectType": "punch"
+  },
+  {
+    "char": "實",
+    "meaning": "열매 실",
+    "spell": "6급 마법 實",
+    "effectType": "explosion"
+  },
+  {
+    "char": "洋",
+    "meaning": "큰바다 양",
+    "spell": "6급 마법 洋",
+    "effectType": "arrow"
+  },
+  {
+    "char": "使",
+    "meaning": "하여금 사",
+    "spell": "6급 마법 使",
+    "effectType": "magic"
+  },
+  {
+    "char": "親",
+    "meaning": "친할 친",
+    "spell": "6급 마법 親",
+    "effectType": "water"
+  },
+  {
+    "char": "死",
+    "meaning": "죽을 사",
+    "spell": "6급 마법 死",
+    "effectType": "arrow"
+  },
+  {
+    "char": "族",
+    "meaning": "겨레 족",
+    "spell": "6급 마법 族",
+    "effectType": "punch"
+  },
+  {
+    "char": "昨",
+    "meaning": "어제 작",
+    "spell": "6급 마법 昨",
+    "effectType": "earth"
+  },
+  {
+    "char": "訓",
+    "meaning": "가르칠 훈",
+    "spell": "6급 마법 訓",
+    "effectType": "slash"
+  },
+  {
+    "char": "開",
+    "meaning": "열 개",
+    "spell": "6급 마법 開",
+    "effectType": "water"
+  },
+  {
+    "char": "形",
+    "meaning": "형상 형",
+    "spell": "6급 마법 形",
+    "effectType": "heart"
+  },
+  {
+    "char": "庭",
+    "meaning": "뜰 정",
+    "spell": "6급 마법 庭",
+    "effectType": "heart"
+  },
+  {
+    "char": "太",
+    "meaning": "클 태",
+    "spell": "6급 마법 太",
+    "effectType": "earth"
+  },
+  {
+    "char": "會",
+    "meaning": "모일 회",
+    "spell": "6급 마법 會",
+    "effectType": "magic"
+  },
+  {
+    "char": "息",
+    "meaning": "쉴 식",
+    "spell": "6급 마법 息",
+    "effectType": "magic"
+  },
+  {
+    "char": "章",
+    "meaning": "글장 장",
+    "spell": "6급 마법 章",
+    "effectType": "punch"
+  },
+  {
+    "char": "端",
+    "meaning": "바를 단",
+    "spell": "6급 마법 端",
+    "effectType": "slash"
+  },
+  {
+    "char": "遠",
+    "meaning": "멀 원",
+    "spell": "6급 마법 遠",
+    "effectType": "slash"
+  },
+  {
+    "char": "善",
+    "meaning": "착할 선",
+    "spell": "6급 마법 善",
+    "effectType": "water"
+  },
+  {
+    "char": "達",
+    "meaning": "통달할 달",
+    "spell": "6급 마법 達",
+    "effectType": "magic"
+  },
+  {
+    "char": "現",
+    "meaning": "나타날 현",
+    "spell": "6급 마법 現",
+    "effectType": "slash"
+  },
+  {
+    "char": "期",
+    "meaning": "기약할 기",
+    "spell": "6급 마법 期",
+    "effectType": "heart"
+  },
+  {
+    "char": "單",
+    "meaning": "홑 단",
+    "spell": "6급 마법 單",
+    "effectType": "explosion"
+  },
+  {
+    "char": "用",
+    "meaning": "쓸 용",
+    "spell": "6급 마법 用",
+    "effectType": "punch"
+  },
+  {
+    "char": "英",
+    "meaning": "꽃부리 영",
+    "spell": "6급 마법 英",
+    "effectType": "heart"
+  },
+  {
+    "char": "例",
+    "meaning": "법식 례",
+    "spell": "6급 마법 例",
+    "effectType": "punch"
+  },
+  {
+    "char": "仕",
+    "meaning": "벼슬 사",
+    "spell": "6급 마법 仕",
+    "effectType": "explosion"
+  },
+  {
+    "char": "鳴",
+    "meaning": "울 명",
+    "spell": "6급 마법 鳴",
+    "effectType": "earth"
+  },
+  {
+    "char": "席",
+    "meaning": "자리 석",
+    "spell": "6급 마법 席",
+    "effectType": "arrow"
+  },
+  {
+    "char": "合",
+    "meaning": "합할 합",
+    "spell": "6급 마법 合",
+    "effectType": "earth"
+  },
+  {
+    "char": "決",
+    "meaning": "결단할 결",
+    "spell": "6급 마법 決",
+    "effectType": "magic"
+  },
+  {
+    "char": "結",
+    "meaning": "맺을 결",
+    "spell": "6급 마법 結",
+    "effectType": "explosion"
+  },
+  {
+    "char": "輕",
+    "meaning": "가벼울 경",
+    "spell": "6급 마법 輕",
+    "effectType": "slash"
+  },
+  {
+    "char": "景",
+    "meaning": "볕 경",
+    "spell": "6급 마법 景",
+    "effectType": "heart"
+  },
+  {
+    "char": "敬",
+    "meaning": "공경할 경",
+    "spell": "6급 마법 敬",
+    "effectType": "water"
+  }
+]

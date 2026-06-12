@@ -9,7 +9,8 @@ export default function VillageMode({
   setOwnedMonsters,
   activeMonsterId,
   setActiveMonsterId,
-  showAlert
+  showAlert,
+  gainExp
 }) {
   const [hatching, setHatching] = useState(false);
   const [hatchResult, setHatchResult] = useState(null);
@@ -28,13 +29,22 @@ export default function VillageMode({
     setHatching(true);
     setHatchResult(null);
 
-    // Simple delay for animation feeling
     setTimeout(() => {
       const randomMonster = unowned[Math.floor(Math.random() * unowned.length)];
       setOwnedMonsters(prev => [...prev, randomMonster.id]);
       setHatchResult(randomMonster);
       setHatching(false);
     }, 1500);
+  };
+
+  const handleBuyExp = (amount) => {
+    if (eggPieces < amount) {
+      showAlert("알 조각이 부족합니다!");
+      return;
+    }
+    setEggPieces(prev => prev - amount);
+    gainExp(amount * 10);
+    showAlert(`알 조각 ${amount}개를 소모하여 ${amount * 10} EXP를 얻었습니다! 🧪`);
   };
 
   return (
@@ -47,55 +57,92 @@ export default function VillageMode({
         </div>
       </header>
 
-      <div className="village-layout">
+      <div className="village-layout" style={{ display: 'flex', gap: '2rem', minHeight: '60vh' }}>
         
-        {/* Left Side: Gacha System */}
-        <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', minHeight: '300px' }}>
-          <h2 style={{ marginBottom: '1rem', color: 'var(--text-main)' }}>몬스터 뽑기</h2>
-          <p style={{ marginBottom: '2rem', textAlign: 'center' }}>알 조각 20개로 몬스터 알을 부화시키세요!</p>
+        {/* Left Side: Split into Top (Hatchery) and Bottom (EXP Potion) */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          
+          {/* Top Row: Gacha System */}
+          <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+            <h2 style={{ marginBottom: '1rem', color: 'var(--text-main)' }}>몬스터 뽑기</h2>
+            <p style={{ marginBottom: '2rem', textAlign: 'center' }}>알 조각 20개로 몬스터 알을 부화시키세요!</p>
 
-          {hatchResult && !hatching ? (
-            <div style={{ textAlign: 'center', animation: 'bounce 0.5s' }}>
-              <h3 style={{ color: 'var(--success)', marginBottom: '1rem' }}>{hatchResult.name} 등장!</h3>
-              <img src={hatchResult.imageUrl} style={{ height: '200px', objectFit: 'contain' }} alt="New Monster" />
-              <div style={{ marginTop: '1rem' }}>
-                <button onClick={() => setHatchResult(null)}>계속하기</button>
+            {hatchResult && !hatching ? (
+              <div style={{ textAlign: 'center', animation: 'bounce 0.5s' }}>
+                <h3 style={{ color: 'var(--success)', marginBottom: '1rem' }}>{hatchResult.name} 등장!</h3>
+                <img src={hatchResult.imageUrl} style={{ height: '150px', objectFit: 'contain' }} alt="New Monster" />
+                <div style={{ marginTop: '1rem' }}>
+                  <button onClick={() => setHatchResult(null)}>계속하기</button>
+                </div>
               </div>
-            </div>
-          ) : (
-            <div style={{ textAlign: 'center' }}>
-              <div 
-                style={{ 
-                  fontSize: '6rem', 
-                  marginBottom: '1rem', 
-                  animation: hatching ? 'shake 0.5s infinite' : 'none',
-                  filter: eggPieces >= 20 ? 'none' : 'grayscale(100%)',
-                  opacity: eggPieces >= 20 ? 1 : 0.5
-                }}
-              >
-                🥚
+            ) : (
+              <div style={{ textAlign: 'center' }}>
+                <div 
+                  style={{ 
+                    fontSize: '5rem', 
+                    marginBottom: '1rem', 
+                    animation: hatching ? 'shake 0.5s infinite' : 'none',
+                    filter: eggPieces >= 20 ? 'none' : 'grayscale(100%)',
+                    opacity: eggPieces >= 20 ? 1 : 0.5
+                  }}
+                >
+                  🥚
+                </div>
+                <button 
+                  onClick={handleHatch} 
+                  disabled={eggPieces < 20 || hatching}
+                  style={{ background: eggPieces >= 20 ? 'var(--accent)' : '#ccc', color: '#333' }}
+                >
+                  {hatching ? '부화하는 중...' : '🥚 일반 알 부화 (-20 조각)'}
+                </button>
               </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', padding: '0 2rem' }}>
+            )}
+          </div>
+
+          {/* Bottom Row: EXP Potion */}
+          <div className="card" style={{ flex: 'none', padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <h3 style={{ marginBottom: '0.5rem', color: 'var(--primary)', fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>🧪 EXP 물약 상점</h3>
+            <p style={{ marginBottom: '1rem', textAlign: 'center', fontSize: '0.9rem' }}>남는 알 조각을 경험치로 교환하세요!</p>
+            
+            <div style={{ display: 'flex', gap: '1rem', width: '100%', padding: '0 1rem' }}>
               <button 
-                onClick={handleHatch} 
-                disabled={eggPieces < 20 || hatching}
-                style={{ background: eggPieces >= 20 ? 'var(--accent)' : '#ccc', color: '#333' }}
+                className="secondary"
+                onClick={() => handleBuyExp(1)} 
+                disabled={eggPieces < 1}
+                style={{ flex: 1, fontSize: '0.8rem', padding: '0.4rem' }}
               >
-                {hatching ? '부화하는 중...' : '🥚 일반 알 부화 (-20 조각)'}
+                1개 ➔ 10 EXP
+              </button>
+              <button 
+                className="secondary"
+                onClick={() => handleBuyExp(10)} 
+                disabled={eggPieces < 10}
+                style={{ flex: 1, fontSize: '0.8rem', padding: '0.4rem' }}
+              >
+                10개 ➔ 100 EXP
               </button>
             </div>
+            <div style={{ width: '100%', padding: '0 1rem', marginTop: '0.5rem' }}>
+              <button 
+                onClick={() => handleBuyExp(eggPieces)} 
+                disabled={eggPieces === 0}
+                style={{ width: '100%', background: 'var(--success)', fontSize: '0.9rem', padding: '0.5rem' }}
+              >
+                전부 교환 ({eggPieces * 10} EXP)
+              </button>
             </div>
-          )}
+          </div>
+
         </div>
 
         {/* Right Side: Collection System */}
-        <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto', maxHeight: '70vh' }}>
-          <h2 style={{ marginBottom: '1rem', color: 'var(--text-main)', textAlign: 'center' }}>내 몬스터 도감</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div style={{ flex: 1, position: 'relative' }}>
+          <div className="card" style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+            <h2 style={{ marginBottom: '1rem', color: 'var(--text-main)', textAlign: 'center' }}>내 몬스터 도감</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             {PLAYER_MONSTERS.map(baseMonster => {
               const isOwned = ownedMonsters.includes(baseMonster.id);
               const isActive = activeMonsterId === baseMonster.id;
-              // Get evolved form if applicable
               const displayMonster = getMonsterById(baseMonster.id);
 
               return (
@@ -130,6 +177,7 @@ export default function VillageMode({
               );
             })}
           </div>
+        </div>
         </div>
 
       </div>
