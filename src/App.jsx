@@ -81,25 +81,84 @@ function App() {
     try {
       const { data, error } = await supabase
         .from('players')
-        .select('exp, level')
+        .select('exp, level, progress_data')
         .eq('id', playerId)
         .single();
       
       if (data) {
         setPlayerExp(data.exp || 0);
         setPlayerLevel(data.level || 1);
+        
+        if (data.progress_data) {
+          const pd = data.progress_data;
+          if (pd.maxUnlockedLevel8 !== undefined) {
+            setMaxUnlockedLevel8(pd.maxUnlockedLevel8);
+            localStorage.setItem('maxUnlockedLevel8', pd.maxUnlockedLevel8);
+          }
+          if (pd.completedHanja8 !== undefined) {
+            setCompletedHanja8(pd.completedHanja8);
+            localStorage.setItem('completedHanja8', JSON.stringify(pd.completedHanja8));
+          }
+          if (pd.maxUnlockedLevel7 !== undefined) {
+            setMaxUnlockedLevel7(pd.maxUnlockedLevel7);
+            localStorage.setItem('maxUnlockedLevel7', pd.maxUnlockedLevel7);
+          }
+          if (pd.completedHanja7 !== undefined) {
+            setCompletedHanja7(pd.completedHanja7);
+            localStorage.setItem('completedHanja7', JSON.stringify(pd.completedHanja7));
+          }
+          if (pd.practiceCount !== undefined) {
+            setPracticeCount(pd.practiceCount);
+            localStorage.setItem('practiceCount', pd.practiceCount);
+          }
+          if (pd.eggPieces !== undefined) {
+            setEggPieces(pd.eggPieces);
+            localStorage.setItem('eggPieces', pd.eggPieces);
+          }
+          if (pd.ownedMonsters !== undefined) {
+            setOwnedMonsters(pd.ownedMonsters);
+            localStorage.setItem('ownedMonsters', JSON.stringify(pd.ownedMonsters));
+          }
+          if (pd.activeMonsterId !== undefined) {
+            setActiveMonsterId(pd.activeMonsterId);
+            localStorage.setItem('activeMonsterId', pd.activeMonsterId);
+          }
+          if (pd.mana !== undefined) {
+            setMana(pd.mana);
+            localStorage.setItem('mana', pd.mana);
+          }
+          if (pd.manaChargeCount !== undefined) {
+            setManaChargeCount(pd.manaChargeCount);
+            localStorage.setItem('manaChargeCount', pd.manaChargeCount);
+          }
+        }
       }
     } catch (e) {
       console.error(e);
     }
   };
 
-  const updateSupabaseExp = async (newExp, newLevel) => {
+  const updateSupabaseData = async () => {
     if (playerId) {
       try {
         await supabase
           .from('players')
-          .update({ exp: newExp, level: newLevel })
+          .update({ 
+            exp: playerExp, 
+            level: playerLevel,
+            progress_data: {
+              maxUnlockedLevel8,
+              completedHanja8,
+              maxUnlockedLevel7,
+              completedHanja7,
+              practiceCount,
+              eggPieces,
+              ownedMonsters,
+              activeMonsterId,
+              mana,
+              manaChargeCount
+            }
+          })
           .eq('id', playerId);
       } catch (e) {
         console.error(e);
@@ -155,9 +214,17 @@ function App() {
     }
   }, [currentProfile]);
 
+  const handleLogout = async () => {
+    if (window.confirm('정말 로그아웃 하시겠습니까?\n(현재까지의 진행 상황은 서버에 안전하게 저장됩니다)')) {
+      await updateSupabaseData();
+      localStorage.clear();
+      window.location.reload();
+    }
+  };
+
   const handleModeChange = (newMode) => {
     if (newMode === 'menu' || newMode === 'leaderboard') {
-      updateSupabaseExp(playerExp, playerLevel);
+      updateSupabaseData();
     }
     if (newMode === 'menu') {
       setSelectedDifficulty(null);
@@ -279,11 +346,11 @@ function App() {
     <div className="app-container">
       {/* Top Profile Bar */}
       {currentMode !== 'leaderboard' && currentProfile && (
-        <div style={{ position: 'absolute', top: '10px', right: '20px', display: 'flex', gap: '1rem', alignItems: 'center', background: 'rgba(255,255,255,0.8)', padding: '0.5rem 1rem', borderRadius: '12px', boxShadow: '0 2px 5px rgba(0,0,0,0.1)', zIndex: 100 }}>
-          <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary)', marginRight: '1rem' }}>
+        <div style={{ position: 'absolute', top: '10px', right: '20px', display: 'flex', gap: '1rem', alignItems: 'center', background: 'rgba(255,255,255,0.9)', padding: '0.5rem 1rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.15)', zIndex: 100 }}>
+          <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary)' }}>
             🔮 {mana}/5
           </div>
-          <div>
+          <div style={{ borderLeft: '1px solid #ccc', paddingLeft: '1rem' }}>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
               {currentProfile.school_name} {currentProfile.grade}학년 {currentProfile.class_name} {currentProfile.student_number}번
             </div>
@@ -291,6 +358,23 @@ function App() {
               Lv.{playerLevel} <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', fontWeight: 'normal' }}>({playerExp}/{playerLevel * 10} EXP)</span>
             </div>
           </div>
+          <button 
+            onClick={handleLogout}
+            style={{ 
+              background: '#ff6b6b', 
+              color: 'white', 
+              border: 'none', 
+              padding: '0.4rem 0.8rem', 
+              borderRadius: '8px', 
+              cursor: 'pointer', 
+              fontSize: '0.8rem',
+              fontWeight: 'bold',
+              boxShadow: '0 2px 0 #cc0000',
+              marginLeft: '0.5rem'
+            }}
+          >
+            로그아웃
+          </button>
         </div>
       )}
 
